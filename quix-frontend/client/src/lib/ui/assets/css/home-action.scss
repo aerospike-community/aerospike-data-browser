@@ -1,0 +1,19 @@
+@import './def/defaults.def';
+@import './def/colors.def';
+@import './def/state.def';
+
+.bi-home-action {
+  display: flex;
+  height: 200px;
+  flex-direction: column;
+  flex-basis: 300px;
+  border-radius: 8px !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  span {
+    font-size: 20px;
+    font-weight: 300;
+  }
+}

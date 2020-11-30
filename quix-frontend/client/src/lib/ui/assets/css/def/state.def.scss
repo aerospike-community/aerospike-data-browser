@@ -1,0 +1,91 @@
+@import 'colors.def';
+@import 'animations.def';
+@import 'defaults.def';
+
+@mixin disabled($theme) {
+  &.bi-disabled,
+  &[disabled='disabled'] {
+    @if ($theme == 'lighter') {
+      color: $lighter-disabled-color !important;
+    } @else if ($theme == 'light') {
+      color: $light-disabled-color !important;
+    } @else if ($theme == 'dark') {
+      color: $dark-disabled-color !important;
+    } @else {
+      color: $darker-disabled-color !important;
+    }
+
+    cursor: default;
+  }
+}
+
+@mixin fade($theme) {
+  @extend %animation-fade-in;
+
+  transition: opacity .3s;
+
+  &.bi-faded {
+    opacity: .7;
+  }
+}
+
+@mixin muted($theme) {
+  @if ($theme == 'lighter') {
+    color: $lighter-muted-color;
+  } @else if ($theme == 'light') {
+    color: $light-muted-color;
+  } @else if ($theme == 'dark') {
+    color: $dark-muted-color;
+  } @else {
+    color: $darker-muted-color;
+  }
+}
+
+@mixin active($theme, $color: null) {
+  &.bi-active {
+    @if ($theme == 'lighter') {
+      background-color: $lighter-active-bg;
+      color: $color or $lighter-color;
+    } @else if ($theme == 'light') {
+      background-color: $light-active-bg;
+      color: $color or $light-color;
+    } @else if ($theme == 'dark') {
+      background-color: $dark-active-bg;
+      color: $color or $dark-color;
+    } @else {
+      background-color: $darker-active-bg;
+      color: $color or $darker-color;
+    }
+  }
+}
+
+@mixin hover($theme, $color: null) {
+  &:hover:not([disabled='disabled']) {
+    @if ($theme == 'lighter') {
+      background-color: $lighter-hover-bg;
+      color: $color or $lighter-color;
+    } @else if ($theme == 'light') {
+      background-color: $light-hover-bg;
+      color: $color or $light-color;
+    } @else if ($theme == 'dark') {
+      background-color: $dark-hover-bg;
+      color: $color or $dark-color;
+    } @else {
+      background-color: $darker-hover-bg;
+      color: $color or $darker-color;
+    }
+  }
+}
+
+@mixin elevate() {
+  transition: box-shadow .3s;
+
+  &:hover {
+    box-shadow: 0 4px 8px lighten($grey--300, 3);
+  }
+
+  &:active {
+    transition: box-shadow .2s;
+    box-shadow: 0 2px 8px lighten($grey--300, 3);
+  }
+}

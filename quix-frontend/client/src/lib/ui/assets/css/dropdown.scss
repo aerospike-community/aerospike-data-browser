@@ -1,0 +1,6 @@
+@import './def/dropdown.def';
+@import './def/icon.def';
+
+.bi-dropdown-menu {
+  @extend %dropdown-menu;
+}

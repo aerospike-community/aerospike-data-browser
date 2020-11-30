@@ -1,0 +1,57 @@
+@import './colors.def';
+
+%empty-state {
+  display: flex;
+  flex-direction: column;
+  font-family: 'bi-ui';
+  align-items: center;
+
+
+  > * {
+    display: flex;
+    justify-content: center;
+  }
+
+  .bi-empty-state-icon {
+    .bi-icon {
+      font-size: 80px;
+    }
+  }
+
+  .bi-empty-state-image {
+    width: 150px;
+    margin-bottom: 10px;
+  }
+
+  .bi-empty-state-header {
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  .bi-empty-state-header + .bi-empty-state-content {
+    margin-top: 3px;
+  }
+
+  .bi-empty-state-content {
+    margin-top: 15px;
+    margin-bottom: 0;
+    font-size: 13px;
+    font-weight: 400;
+  }
+}
+
+%empty-state-with-image {
+  @extend %empty-state;
+
+  &:before {
+    content: '';
+    display: block;
+    height: 100px;
+    margin-bottom: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}

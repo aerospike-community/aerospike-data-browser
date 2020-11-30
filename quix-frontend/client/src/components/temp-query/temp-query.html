@@ -1,0 +1,27 @@
+<div class="bi-c-h bi-grow bi-s-v--x3">
+  <div class="bi-align bi-s-h--x2">
+    <div class="bi-text--lg bi-text--300">
+      Playground
+    </div>
+
+    <quix-plugin-picker
+      type="note"
+      filter="vm.pluginFilter"
+      ng-model="vm.type"
+    ></quix-plugin-picker>
+  </div>
+
+  <bi-sql-runner
+    class="bi-c-h bi-grow"
+    ng-model="code"
+    ng-change="events.onChange()"
+    bsr-options="::{fitContent: true, params: true, focus: true}"
+    type="vm.type"
+    runner="runner"
+    on-save="events.onSave()"
+    on-run="events.onRun()"
+    on-runner-load="events.onRunnerInstanceLoad(instance)"
+    on-runner-created="events.onRunnerCreated(runner)"
+    on-runner-destroyed="events.onRunnerDestroyed(runner)"
+  ></bi-sql-runner>
+</div>

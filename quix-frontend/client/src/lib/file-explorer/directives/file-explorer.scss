@@ -1,0 +1,104 @@
+@import '../../ui/assets/css/def/colors.def';
+
+$item-height: 35px;
+
+bi-file-explorer,
+bi-file-explorer-static,
+bi-file-explorer-static,
+bi-file-explorer-inner-static {
+  position: relative;
+  display: block;
+
+  bi-dropdown {
+    bi-toggle {
+      height: $item-height;
+    }
+  }
+
+  > ul > li {
+    user-select: none;
+    cursor: default !important;
+
+    .fe-item {
+      padding-right: 5px;
+      height: $item-height;
+    
+      > div {
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }    
+
+    .fe-item-name {
+      height: $item-height;
+
+      .fe-icon-container {
+        line-height: 0;
+      }
+    
+      .fe-icon {
+        margin-right: 4px;
+        font-size: 18px;
+        vertical-align: text-bottom;
+      }
+    }
+  }
+
+  ul.fe-folders {
+    > li {
+      .fe-toggle {
+        transition: transform .2s;
+        transform: rotate(-90deg);
+        font-size: 19px;
+
+        &.fe-toggle--hidden {
+          visibility: hidden;
+        }
+      }
+
+      &.fe-folder--open {
+        > div > div > .fe-toggle {
+          transform: rotate(0);
+        }
+      }
+
+      > .fe-item {
+        @for $i from 0 through 3 {
+          &.fe-item-depth-#{$i} {
+            padding-left: $i * 12px + 4px;
+          }
+        }
+      }
+    }
+  }
+  
+  &.fe-folder-mode-select {
+    ul.fe-files > li,
+    ul.fe-folders > li > .fe-item {
+      transition: border-color .2s;
+      border-left: 2px solid transparent;
+
+      &:hover,
+      &.bi-active {
+        border-color: $primary;
+      }
+    }
+  }
+
+  ul.fe-files {
+    .fe-item {
+      @for $i from 0 through 3 {
+        &.fe-item-depth-#{$i} {
+          padding-left: $i * 12px + 29px;
+        }
+      }
+
+     > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

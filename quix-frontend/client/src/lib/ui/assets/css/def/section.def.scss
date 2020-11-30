@@ -1,0 +1,82 @@
+@import 'colors.def';
+@import 'defaults.def';
+@import 'header.def';
+@import 'content.def';
+@import 'flex.def';
+
+$section-header-class: '.bi-section-header';
+$section-controls-class: '.bi-section-controls';
+$section-content-class: '.bi-section-content';
+$section-title-class: '.bi-section-title';
+$section-separator-class: '.bi-section-header-spr';
+
+%section {
+  @include flex(column);
+
+  > #{$section-header-class} {
+    @include header(50px);
+
+    #{$section-title-class} {
+      @include header-title(16px);
+      letter-spacing: 1px;
+    }
+
+    #{$section-separator-class} {
+      @include header-separator($grey--200);
+    }
+  }
+
+  > #{$section-controls-class} {
+    @include header(30px);
+
+    margin-bottom: $default-space * 1.5;
+  }
+
+  > #{$section-content-class},
+  > #{$section-content-class}--center,
+  > #{$section-content-class}--list {
+    flex: 1;
+    overflow: auto;
+  }
+
+  > #{$section-content-class}--center {
+    @include flex(column, center, center);
+  }
+
+  > #{$section-content-class}--list {
+    padding-bottom: 400px !important;
+  }
+
+  &.bi-theme--dark {
+    > #{$section-header-class} {
+      color: $grey--200;
+    }
+
+    > #{$section-content-class},
+    > #{$section-content-class}--center,
+    > #{$section-content-class}--list {
+      background-color: $grey--800;
+    }
+  }
+}
+
+// Full-height, full-width section with scrollable content
+@mixin section($bg-color) {
+  @extend %section;
+
+  // background-color: $bg-color;
+
+  > #{$section-content-class},
+  > #{$section-content-class}--center,
+  > #{$section-content-class}--list {
+    @include content();
+  }
+}
+
+// Full-height, fixed-width section with scrollable content
+@mixin section-static($content-bg-color, $width) {
+  @include section($content-bg-color);
+
+  width: $width;
+  flex: 0 0 $width;
+}

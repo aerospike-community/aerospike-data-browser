@@ -1,0 +1,75 @@
+@import 'colors.def';
+@import 'defaults.def';
+@import 'border.def';
+@import 'flex.def';
+@import 'icon.def';
+@import 'state.def';
+
+%dropdown-content {
+  display: block;
+  padding: 5px 10px;
+  border: 1px solid $grey--200;
+  border-radius: 3px;
+  box-shadow: $default-box-shadow;
+  overflow-y: auto;
+}
+
+%dropdown-menu {
+  @extend %dropdown-content;
+
+  padding: 5px 0;
+  max-height: 300px;
+  user-select: none;
+
+  > li {
+    @include flex(row, center);
+    @include hover('lighter');
+    @include disabled('lighter');
+
+    position: relative;
+    padding: 7px 20px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &.bi-active:not([disabled]),
+    &:hover:not([disabled]) {
+      background-color: $grey--50;
+    }
+
+    &:not([disabled='disabled']) {
+      &.selected {
+        &:before {
+          @extend %icon;
+
+          position: absolute;
+          content: 'check';
+          left: 5px;
+          color: $primary;
+          font-size: 14px !important;
+        }
+      }
+
+      .bi-icon {
+        @include muted('lighter');
+      }
+    }
+
+    .bi-icon {
+      font-size: 18px;
+    }
+  }
+
+  .bi-dropdown-separator {
+    @include border(bottom);
+
+    margin: 5px;
+    padding: 0;
+
+    &:first-child,
+    &:last-child {
+      height: 0;
+      margin: 0;
+      border: 0;
+    }
+  }
+}

@@ -1,0 +1,59 @@
+@import './def/empty-state.def';
+@import './def/animations.def';
+@import './def/state.def';
+
+.bi-empty-state {
+  @extend %empty-state;
+}
+
+.bi-empty-state--loading {
+  @extend %empty-state;
+
+  align-items: center;
+
+  &:before {
+    @extend %animation-rotate;
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid $blue--500;
+    border-right-color: transparent;
+    border-radius: 100px;
+  }
+}
+
+.bi-theme--lighter {
+  .bi-empty-state,
+  .bi-empty-state--loading {
+    @include muted('lighter');
+  }
+}
+
+.bi-theme--light {
+  .bi-empty-state,
+  .bi-empty-state--loading {
+    @include muted('light');
+  }
+
+  .bi-theme--lighter {
+    .bi-empty-state,
+    .bi-empty-state--loading {
+      @include muted('lighter');
+    }
+  }
+}
+
+.bi-theme--dark {
+  .bi-empty-state,
+  .bi-empty-state--loading {
+    @include muted('dark');
+  }
+}
+
+.bi-theme--darker {
+  .bi-empty-state,
+  .bi-empty-state--loading {
+    @include muted('darker');
+  }
+}

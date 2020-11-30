@@ -1,0 +1,36 @@
+@import 'colors.def';
+@import 'morph.def';
+@import 'state.def';
+
+%action {
+  position: relative;
+  padding: 3px;
+  border-radius: 3px;
+  font-style: normal;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+
+  &:active:not([disabled='disabled']) {
+    top: 1px;
+    left: 1px;
+  }
+}
+
+@mixin action($theme) {
+  @extend %action;
+  @include disabled($theme);
+  @include muted($theme);
+  @include hover($theme);
+  @include active($theme);
+
+  &.bi-action-loader {
+    @extend %morph-to-loader;
+
+    > span {
+      width: 30px !important;
+      height: 30px !important;
+      line-height: 30px !important;
+    }
+  }
+}

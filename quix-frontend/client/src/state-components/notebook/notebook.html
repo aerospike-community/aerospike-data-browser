@@ -1,0 +1,170 @@
+<div class="bi-section bi-c-h bi-grow">
+  <div class="bi-section-header">
+    <div>
+      <div class="bi-section-title bi-r-h bi-align bi-s-h bi-fade-in" ng-if="vm.state.is('Result') || vm.state.after('Result')">
+        <img
+          class="quix-user-avatar bi-fade-in"
+          ng-if="(vm.state.is('Result') || vm.state.after('Result')) && vm.state.value().notebook.ownerDetails.avatar"
+          ng-src="{{::vm.state.value().notebook.ownerDetails.avatar}}"
+        >
+
+        <quix-breadcrumbs
+          class="bi-dont-shrink"
+          breadcrumbs="vm.breadcrumbs"
+          quix-breadcrumbs-options="::{focusName: options.isNew}"
+          on-folder-click="events.onBreadcrumbClick(file)"
+          on-name-change="events.onNameChange(file)"
+          readonly="!permissions.rename"
+        ></bi-breadcrumbs>
+      </div>
+
+      <i class="bi-action bi-icon bi-secondary" ng-if="vm.view.hasChanges" ng-click="events.onSave()">save</i>
+    </div>
+
+    <div class="bi-dont-shrink">
+      <quix-meta entity="vm.state.value().notebook" ng-if="vm.state.is('Result') || vm.state.after('Result')"></quix-meta>
+    </div>
+  </div>
+
+  <div class="bi-section-controls bi-fade-in" ng-if="(vm.state.is('Result') && permissions.edit) || vm.state.after('Result')">
+    <div>
+      <div class="bi-fade-in"  ng-if="!vm.marked.enabled">
+        <button
+          class="bi-button--primary"
+          ng-if="vm.noteTypes.length === 1"
+          ng-disabled="!permissions.addNote"
+          ng-click="permissions.addNote && events.onNoteAdd(vm.noteTypes[0])"
+          data-hook="notebook-add-note"
+          tabindex="-1"
+        >
+          <i class="bi-icon--sm">add</i>
+          <span>Add note</span>
+        </button>
+
+        <bi-dropdown
+          ng-if="vm.noteTypes.length > 1"
+          bd-options="::{minWidth: 'toggle'}"
+          readonly="!permissions.addNote"
+        >
+          <bi-toggle>
+            <button
+              class="bi-button--primary"
+              ng-disabled="!permissions.addNote"
+              data-hook="notebook-add-note-dropdown"
+              tabindex="-1"
+            >
+              <i class="bi-icon--sm">add</i>
+              <span>Add note</span>
+              <i class="bi-icon--sm">arrow_drop_down</i>
+            </button>
+          </bi-toggle>
+          
+          <ul class="bi-dropdown-menu">
+            <li
+              ng-repeat="type in ::vm.noteTypes"
+              ng-click="permissions.addNote && events.onNoteAdd(type)"
+              data-hook="notebook-add-note"
+            >{{::type | biToHumanCase}}</li>
+          </ul>
+        </bi-dropdown>
+      </div>
+
+      <div class="bi-align bi-s-h bi-fade-in" ng-if="vm.marked.enabled">
+        <quix-actions 
+          type="note"
+          context="vm.marked.list"
+          permissions="::permissions.bulk"
+          on-delete="events.onMarkedNotesDelete(context)"
+        ></quix-actions>
+  
+        <span class="bi-muted">{{vm.marked.list.length}} notes selected</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="bi-fade-in" ng-if="!vm.marked.enabled">
+        <quix-actions
+          type="notebook"
+          context="vm.state.value().notebook"
+          permissions="::permissions"
+          quix-actions-options="{
+            reverse: true,
+            confirmOnDelete: vm.state.is('Content')
+          }"
+          on-like-toggle="events.onLikeToggle(context)"
+          on-share="events.onShare(context)"
+          on-clone="events.onClone(context)"
+          on-delete="events.onDelete(context)"
+        ></quix-actions>
+      </div>
+    </div>
+  </div>
+
+  <div class="bi-section-content--center" ng-if="vm.state.before('Content')">
+    <div class="bi-empty-state--loading bi-fade-in" ng-if="vm.state.is('Initial')">
+      <div class="bi-empty-state-content">Loading notebook...</div>
+    </div>
+
+    <div class="bi-empty-state bi-fade-in" ng-if="vm.state.is('Error')" data-hook="notebook-error">
+      <quix-image class="bi-empty-state-image" name="error_{{::vm.state.value().error.status}}.svg"></quix-image>
+      <div class="bi-empty-state-header">{{::vm.state.value().error.message}}</div>
+      <div class="bi-empty-state-content">
+        <a class="bi-link" ng-click="events.onGoToRootClick()">Go to my notebooks</a>
+      </div>
+    </div>
+
+    <div
+      class="bi-empty-state bi-s-v bi-fade-in"
+      ng-if="vm.state.is('Result')"
+      data-hook="notebook-empty"
+    >
+      <quix-image class="bi-empty-state-image" name="no_data.svg"></quix-image>
+
+      <div class="bi-empty-state-header">Notebook is empty</div>
+      <div class="bi-empty-state-content bi-s-h--x05" ng-if="permissions.addNote">
+        <a class="bi-link" ng-click="events.onNoteAdd()">Add note</a>
+      </div>
+    </div>
+  </div>
+
+  <div 
+    class="quix-note-container bi-section-content--list bi-s-v--x15"
+    ng-class="::{'quix-note-container--editable': !!permissions.note.edit}"
+    ng-if="vm.state.is('Content')"
+    data-hook="notebook-content"
+    ui-sortable="{
+      axis: 'y',
+      handle: '.quix-note-drag-handle',
+      opacity: '0.9',
+      disabled: !permissions.bulk.reorder,
+      stop: events.onNoteReorder
+    }"
+    ng-model="vm.state.value().notes"
+  >
+    <quix-note
+      class="bi-fade-in"
+      ng-repeat="note in vm.state.value().notes track by note.id"
+      note="note"
+      permissions="::permissions.note"
+      quix-note-options="{
+        fold: vm.notes.get(note).fold === null || vm.notes.get(note).fold,
+        focusName: vm.notes.get(note).focusName,
+        focusEditor: !options.isNew,
+      }"
+      marked="!!vm.marked.map[note.id]"
+      runner="runners[note.id]"
+      on-content-change="events.onNoteContentChange(note)"
+      on-name-change="events.onNoteNameChange(note)"
+      on-share="events.onNoteShare(note, params)"
+      on-clone="events.onNoteClone(note)"
+      on-delete="events.onNoteDelete(note)"
+      on-mark-toggle="events.onMarkToggle(note)"
+      on-save="events.onNoteSave()"
+      on-run="events.onNoteRun()"
+      on-runner-created="events.onRunnerCreated(note, runner)"
+      on-runner-destroyed="events.onRunnerDestroyed(note, runner)"
+      data-hook="notebook-note"
+      bi-scroll-to="{{vm.state.value().note.id === note.id}}"
+    ></quix-note>
+  </div>
+</div>

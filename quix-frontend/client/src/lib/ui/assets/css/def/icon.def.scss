@@ -1,0 +1,24 @@
+@import 'colors.def';
+@import 'state.def';
+
+%icon {
+  display: inline-block;
+  font-family: 'Material Icons' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+@mixin icon($theme) {
+  @extend %icon;
+  @include disabled($theme);
+  @include muted($theme);
+}

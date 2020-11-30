@@ -1,0 +1,6 @@
+<div class="bi-c">
+  <pre ng-class="::{
+    'bi-white': row.level === 'INFO',
+    'bi-danger': row.level === 'ERROR'
+  }" ng-repeat="row in query.getResults().buffer"><span class="bi-white">[{{::row.timestamp}}]</span> {{::row.line}}</pre>
+</div>

@@ -1,0 +1,76 @@
+@import './def/colors.def';
+@import './def/state.def';
+
+.bi-theme--light {
+  .bi-disabled {
+    @include disabled('light');
+  }
+
+  .bi-muted {
+    @include muted('light');
+  }
+
+  .bi-theme--lighter {
+    .bi-disabled {
+      @include disabled('lighter');
+    }
+
+    .bi-muted {
+      @include muted('lighter');
+    }
+  }
+}
+
+.bi-theme--lighter {
+  .bi-disabled {
+    @include disabled('lighter');
+  }
+
+  .bi-muted {
+    @include muted('lighter');
+  }
+}
+
+.bi-theme--dark {
+  .bi-disabled {
+    @include disabled('dark');
+  }
+
+  .bi-muted {
+    @include muted('dark');
+  }
+}
+
+.bi-theme--darker {
+  .bi-disabled {
+    @include disabled('darker');
+  }
+
+  .bi-muted {
+    @include muted('darker');
+  }
+}
+
+.bi-primary {
+  color: $primary !important;
+}
+
+.bi-secondary {
+  color: $secondary !important;
+}
+
+.bi-success {
+  color: $success !important;
+}
+
+.bi-warning {
+  color: $warning !important;
+}
+
+.bi-danger {
+  color: $danger !important;
+}
+
+.bi-white {
+  color: $white !important;
+}

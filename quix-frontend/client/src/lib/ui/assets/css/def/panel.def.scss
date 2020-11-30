@@ -1,0 +1,37 @@
+@import 'colors.def';
+@import 'defaults.def';
+@import 'border.def';
+@import 'header.def';
+@import 'content.def';
+@import 'space.def';
+
+$panel-header-class: '.bi-panel-header';
+$panel-content-class: '.bi-panel-content';
+$panel-title-class: '.bi-panel-title';
+
+%panel {
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+  overflow: hidden;
+}
+
+/// Simple panel (header + content)
+@mixin panel() {
+  @extend %panel;
+
+  > #{$panel-header-class} {
+    @include header(44px);
+
+    #{$panel-title-class} {
+      @include header-title();
+    }
+
+    & + #{$panel-content-class} {
+      padding-top: 10px;
+    }
+  }
+
+  > #{$panel-content-class} {
+    @include content();
+  }
+}

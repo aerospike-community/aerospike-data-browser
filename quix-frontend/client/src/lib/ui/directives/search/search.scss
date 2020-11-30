@@ -1,0 +1,112 @@
+@import '../../assets/css/def/colors.def';
+@import '../../assets/css/def/defaults.def';
+
+bi-search {
+  display: inline-flex;
+  position: relative;
+
+  .bi-input {
+    padding-right: 32px;
+
+    &.bs-has-context-icon {
+      padding-left: 34px;
+    }
+  }
+
+  .bi-icon {
+    font-size: 22px;
+  }
+
+  .bs-search,
+  .bs-close,
+  .bs-context {
+    transition: color .3s;
+    position: absolute;
+    top: 50%;
+    margin-top: -11px;
+  }
+
+  .bs-search {
+    right: 6px;
+  }
+
+  .bs-close {
+    right: 5px;
+    margin-top: -14px;
+
+    .bi-icon {
+      color: $primary !important;
+    }
+  }
+
+  .bs-context {
+    left: 6px;
+  }
+
+  &.bs-focused,
+  &.bs-hovered
+  &.bs-has-text {
+    .bs-search {
+      color: $primary !important;
+    }
+  }
+
+  &.bs-has-text {
+    .bi-input {
+      border-color: $blue--300 !important;
+    }
+  }
+
+  &.bi-search--rnd,
+  &.bi-search--borderless {
+    .bi-input {
+      height: 42px !important;
+      font-weight: 600;
+
+      &.bs-has-context-icon {
+        padding-left: 40px;
+      }
+    }
+
+    .bs-context {
+      left: 12px;
+    }
+
+    .bs-search {
+      right: 14px;
+    }
+
+    .bs-close {
+      right: 12px;
+    }
+  }
+
+  &.bi-search--rnd {
+    border-radius: 100px;
+
+    .bi-input {
+      padding: 0 40px 0 20px;
+      border-radius: 100px;
+    }
+  }
+
+  &.bi-search--borderless {
+    .bi-input {
+      padding-left: 0;
+      border: 0;
+
+      &.bs-has-context-icon {
+        padding-left: 29px;
+      }
+    }
+
+    .bs-context {
+      left: 0;
+    }
+
+    .bs-search,
+    .bs-close {
+      right: 0;
+    }
+  }
+}

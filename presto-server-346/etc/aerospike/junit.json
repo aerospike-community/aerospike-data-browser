@@ -1,0 +1,64 @@
+[
+	{
+		"schemaName": "test",
+		"tableName": "junit",
+		"columns":[
+			{
+				"name": "id",
+				"type": "varchar",
+				"hidden": false
+			},
+			{
+				"name": "int",
+				"type": "bigint",
+				"hidden": false
+			},
+			{
+				"name": "bin1",
+				"type": "bigint",
+				"hidden": false
+			},
+			{
+				"name": "list",
+				"type": "json",
+				"hidden": false
+			},
+			{
+				"name": "map",
+				"type": "json",
+				"hidden": false
+			}
+		]
+	},
+	{
+		"schemaName": "test",
+		"tableName": "junit2",
+		"columns":[
+			{
+				"name": "id",
+				"type": "varchar",
+				"hidden": false
+			},
+			{
+				"name": "int",
+				"type": "bigint",
+				"hidden": false
+			},
+			{
+				"name": "bin1",
+				"type": "bigint",
+				"hidden": false
+			},
+			{
+				"name": "list",
+				"type": "json",
+				"hidden": false
+			},
+			{
+				"name": "map",
+				"type": "json",
+				"hidden": false
+			}
+		]
+	}
+]

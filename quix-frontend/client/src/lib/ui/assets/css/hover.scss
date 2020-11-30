@@ -1,0 +1,14 @@
+@import './def/animations.def';
+
+.bi-hover-parent {
+  .bi-hover-target {
+    transition: opacity .2s;
+    opacity: 0;
+  }
+
+  &:hover {
+    .bi-hover-target {
+      opacity: 1;
+    }
+  }
+}

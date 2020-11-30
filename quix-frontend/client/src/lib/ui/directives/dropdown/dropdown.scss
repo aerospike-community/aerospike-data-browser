@@ -1,0 +1,38 @@
+@import '../../assets/css/def/icon.def';
+@import '../../assets/css/def/animations.def';
+@import '../../assets/css/def/defaults.def';
+
+bi-dropdown {
+  position: relative;
+  display: inline-flex;
+
+  [ng-transclude="toggle"] {
+    display: inline-flex;
+    user-select: none;
+    cursor: pointer;
+
+    &.bt-caret {
+      &:after {
+        @extend %icon;
+
+        content: 'arrow_drop_down';
+        font-size: 18px;
+        vertical-align: text-top;
+      }
+    }
+
+    &.bt-readonly {
+      cursor: default;
+    }
+
+    bi-toggle {
+      display: inline-flex;
+    }
+  }
+
+  .bd-content {
+    position: fixed;
+    border-radius: 3px;
+    z-index: 200;
+  }
+}

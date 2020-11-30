@@ -1,0 +1,26 @@
+@import '../../lib/ui/assets/css/def/colors.def';
+
+quix-home {
+  .quix-home-welcome {
+    margin-bottom: 100px;
+    padding: 60px 0 60px;
+    text-align: center;
+
+    .quix-home-welcome-title {
+      font-size: 50px;
+      font-weight: 200;
+    }
+  }
+
+  .quix-home-actions {
+    > * {
+      &:not(:last-child) {
+        margin-right: 50px;
+
+        img {
+          
+        }
+      }
+    }
+  }
+}

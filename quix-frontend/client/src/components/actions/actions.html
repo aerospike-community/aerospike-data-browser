@@ -1,0 +1,86 @@
+<div 
+  class="bi-align"
+  ng-class="::{
+    'quix-actions-reverse': options.reverse,
+    'quix-actions-compact': options.compact,
+    'bi-s-h--x15': !options.compact,
+    'bi-s-h': options.compact
+  }"
+>
+  <bi-dropdown
+    ng-if="permissions.delete && !options.bulk"
+    bd-options="::{align: 'right'}"
+    data-hook="actions-menu"
+  >
+    <bi-toggle>
+      <i 
+        class="bi-action"
+        ng-class="::{
+          'bi-icon': !options.compact,
+          'bi-icon--sm': options.compact
+        }"
+        ng-click="$event.stopPropagation();"
+      >more_horiz</i>
+    </bi-toggle>
+    
+    <ul class="bi-dropdown-menu">
+      <li class="bi-align bi-s-h" ng-click="$event.stopPropagation(); events.onDelete()" data-hook="actions-delete">
+        <i class="bi-icon--sm bi-muted">delete</i>
+        <span>Delete {{::type}}</span>
+      </li>
+    </ul>
+  </bi-dropdown>
+
+  <button
+    class="bi-button--danger"
+    ng-if="permissions.delete && options.bulk"
+    ng-click="events.onDelete()"
+    data-hook="actions-delete"
+  >
+    <i class="bi-icon--sm">delete_sweep</i>
+    <span>Delete {{::type}}s</span>
+  </button>
+    
+  <bi-tooltip ng-if="::permissions.clone">
+    <bi-toggle>
+      <i 
+        class="bi-action"
+        ng-class="::{
+          'bi-icon': !options.compact,
+          'bi-icon--sm': options.compact
+        }"
+        ng-click="$event.stopPropagation(); events.onClone()"
+      >file_copy</i>
+    </bi-toggle>
+    Clone {{::type}}
+  </bi-tooltip>
+    
+  <bi-tooltip ng-if="::permissions.share">
+    <bi-toggle>
+      <i
+        class="bi-action"
+        ng-class="::{
+          'bi-icon': !options.compact,
+          'bi-icon--sm': options.compact
+        }"
+        ng-click="$event.stopPropagation(); events.onShare()"
+      >share</i>
+    </bi-toggle>
+    Share {{::type}}
+  </bi-tooltip>
+      
+  <bi-tooltip ng-if="::permissions.like">
+    <bi-toggle>
+      <i
+        class="bi-action"
+        ng-class="{
+          'bi-icon': !options.compact,
+          'bi-icon--sm': options.compact,
+          'bi-danger': context.isLiked
+        }"
+        ng-click="$event.stopPropagation(); events.onLikeToggle()"
+      >{{context.isLiked ? 'favorite' :'favorite_border'}}</i>
+    </bi-toggle>
+    {{context.isLiked ? 'Remove' : 'Add'}} {{::type}} {{context.isLiked ? 'from' : 'to'}} favorites
+  </bi-tooltip>
+</div>

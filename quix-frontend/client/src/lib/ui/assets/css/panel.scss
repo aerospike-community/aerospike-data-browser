@@ -1,0 +1,8 @@
+@import './def/colors.def';
+@import './def/defaults.def';
+@import './def/panel.def';
+@import './def/action.def';
+
+.bi-panel {
+  @include panel();
+}

@@ -1,0 +1,87 @@
+<bi-runner
+  data="model.value"
+  version="version"
+  runner="runner"
+  br-options="{
+    type: type,
+    buttonText: vm.runnerOptions.buttonText,
+    disableCustomActions: options.disableCustomActions,
+    autoRun: options.autoRun,
+  }"
+  on-run="events.onRun(runner)"
+  on-runner-created="events.onRunnerCreated(runner)"
+  on-runner-destroyed="events.onRunnerDestroyed(runner)"
+  on-load="events.onRunnerLoad(instance)"
+  table-formatter="tableFormatter()"
+  download-file-name="downloadFileName({query: query, runner: runner})"
+  $state="$state"
+>
+  <editor class="bi-c-h">
+    <bi-code-editor
+      class="bi-c-h"
+      ng-model="model.value"
+      bce-options="::{
+        focus: options.focus,
+        params: options.params,
+        customParams: options.customParams,
+        fitContent: options.fitContent,
+        shareParams: options.shareParams,
+        dateFormat: options.dateFormat
+      }"
+      on-save="onSave()"
+      on-load="events.onEditorLoad(instance)"
+      on-params-share="onParamsShare({params: params})"
+      readonly="readonly"
+    ></bi-code-editor>
+  </editor>
+
+  <actions bi-html="renderActions()"></actions>
+  <stats ng-transclude="stats"></stats>
+
+  <run-hint>
+    <bi-tooltip ng-if="vm.hint.run.enabled && !readonly">
+      <bi-toggle>
+        <i class="bi-icon bi-disabled">keyboard</i>
+      </bi-toggle>
+
+      <table>
+        <tr>
+          <th>
+            <span class="bi-tag--sm">{{::getCtrlKeyName()}} + Enter</span>
+          </th>
+          <th>
+            Run note
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <span class="bi-tag--sm">{{::getCtrlKeyName()}} + S</span>
+          </th>
+          <th>
+            Save note
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <span class="bi-tag--sm">Ctrl + Space</span>
+          </th>
+          <th>
+            Toggle autocompletion
+          </th>
+        </tr>
+        <tr ng-if="::options.params">
+          <th>
+            <span class="bi-tag--sm">$</span>
+          </th>
+          <th>
+            Insert parameters
+          </th>
+        </tr>
+      </table>
+    </bi-tooltip>
+  </run-hint>
+       
+  <controls ng-transclude="controls"></controls>
+</bi-runner>
+
+

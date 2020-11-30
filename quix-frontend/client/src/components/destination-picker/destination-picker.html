@@ -1,0 +1,37 @@
+<div class="bi-c-h bi-grow bi-s-v--x15 bi-fade-in" ng-if="vm.state.is('Content')" data-hook="files-sidebar-content">
+  <bi-file-explorer
+    class="bi-c-h bi-grow bi-scroll"
+    ng-model="vm.state.value().tree"
+    fe-options="::{folderMode: 'select', expandRootFolder: true}"
+    on-load="events.onFileExplorerLoad(fileExplorer)"
+    on-file-click="events.onFileClick(file)"
+    on-folder-click="events.onFolderClick(folder)"
+    readonly="true"
+  ></bi-file-explorer>
+</div>
+
+<div class="bi-c-h bi-align bi-center bi-grow" ng-if="vm.state.before('Content')">
+  <div class="bi-empty-state--loading bi-fade-in" ng-if="vm.state.is('Initial')">
+    <div class="bi-empty-state-content">Loading {{::context}}s...</div>
+  </div>
+
+  <div class="bi-empty-state bi-fade-in" ng-if="vm.state.is('Error')" data-hook="files-sidebar-error">
+    <div class="bi-empty-state-icon bi-danger">
+      <i class="bi-icon bi-danger">error_outline</i>
+    </div>
+    <div class="bi-empty-state-header">{{::vm.state.value().error.message}}</div>
+  </div>
+
+  <div
+    class="bi-empty-state bi-s-v bi-fade-in"
+    ng-if="vm.state.is('Result')"
+    data-hook="files-sidebar-empty"
+  >
+    <div class="bi-empty-state-icon">
+      <i class="bi-icon">note_add</i>
+    </div>
+    <div class="bi-empty-state-header">
+      You don't have any {{::context}}s...
+    </div>
+  </div>
+</div>

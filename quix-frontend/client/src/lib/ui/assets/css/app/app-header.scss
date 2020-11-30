@@ -1,0 +1,5 @@
+@import '../def/app/app-header.def';
+
+.bi-app-header {
+  @extend %app-header;
+}

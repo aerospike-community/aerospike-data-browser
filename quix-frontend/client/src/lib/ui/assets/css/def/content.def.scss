@@ -1,0 +1,5 @@
+@import 'defaults.def';
+
+@mixin content($padding: $default-space * 1.5) {
+  padding: $padding;
+}

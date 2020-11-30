@@ -1,0 +1,18 @@
+@import '../../../../ui/assets/css/def/colors.def';
+@import '../../../../ui/assets/css/def/flex.def';
+
+bi-console-result {
+  @include flex(column);
+
+  height: 100%;
+  padding: 10px;
+  font-family: 'Courier';
+  font-size: 12px;
+  color: $white;
+  background-color: $black;
+  overflow-y: auto;
+
+  pre {
+    white-space: pre-line;
+  }
+}

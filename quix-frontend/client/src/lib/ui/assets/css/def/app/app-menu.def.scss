@@ -1,0 +1,19 @@
+@import '../colors.def';
+@import '../defaults.def';
+@import '../flex.def';
+@import '../border.def';
+@import '../action.def';
+@import '../state.def';
+
+%app-menu {
+  width: 48px;
+
+  ul {
+    li {
+      @include flex(row, center, center);
+
+      width: 100%;
+      padding: 9px;
+    }
+  }
+}

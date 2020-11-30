@@ -1,0 +1,76 @@
+@import './def/colors.def';
+@import './def/button.def';
+@import './def/flex.def';
+
+.bi-button--primary {
+  @include button($primary);
+}
+
+.bi-button--secondary {
+  @include button($secondary);
+}
+
+.bi-button--success {
+  @include button($success);
+}
+
+.bi-button--warning {
+  @include button($warning);
+}
+
+.bi-button--danger {
+  @include button($danger);
+}
+
+.bi-button {
+  @include button-size();
+}
+
+.bi-button--sm {
+  @include button-size(22px, 8px, 10px);
+}
+
+.bi-button-group {
+  @include flex();
+
+  border-radius: 3px;
+  overflow: hidden;
+
+  button {
+    border-radius: 0 !important;
+  }
+
+  a {
+    border-radius: 0 !important;
+  }
+}
+
+.bi-theme--lighter {
+  .bi-button {
+    @include button-theme('lighter');
+  }
+}
+
+.bi-theme--light {
+  .bi-button {
+    @include button-theme('light');
+  }
+
+  .bi-theme--lighter {
+    .bi-button {
+      @include button-theme('lighter');
+    }
+  }
+}
+
+.bi-theme--dark {
+  .bi-button {
+    @include button-theme('dark');
+  }
+}
+
+.bi-theme--darker {
+  .bi-button {
+    @include button-theme('darker');
+  }
+}

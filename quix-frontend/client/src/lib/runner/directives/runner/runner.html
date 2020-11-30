@@ -1,0 +1,152 @@
+<div class="bi-c-h bi-grow" ng-transclude="editor"></div>
+
+<div class="bi-spread bi-s-h--x3 bi-dont-shrink">
+  <div class="bi-r-i bi-align bi-s-h">
+    <div class="bi-button-group">
+      <button
+        class="br-run-toggle bi-button--secondary bi-center"
+        type="button"
+        ng-class="{'bi-button--danger': vm.runner.enabled}"
+        ng-click="events.onToggleRun()"
+      >
+        {{vm.runner.enabled ? 'stop' : options.buttonText || 'Run'}}
+      </button>
+
+      <bi-dropdown
+        class="br-custom-actions-toggle"
+        ng-if="vm.customActions.enabled && !options.disableCustomActions && !vm.runner.enabled"
+        bd-options="::{align: 'left'}"
+      >
+        <bi-toggle>
+          <button class="bi-button--secondary bi-center bi-caret"></button>
+        </bi-toggle>
+
+        <div ng-transclude="actions"></div>
+      </bi-dropdown>
+    </div>
+
+    <bi-progress-gauge class="bi-fade-in" ng-if="vm.runner.enabled" value="runner.progress"></bi-progress-gauge>
+
+    <span ng-if="!vm.runner.enabled && vm.result.enabled">
+      <i
+        class="br-download-action bi-button--success bi-icon--sm bi-fade-in"
+        ng-if="!vm.result.current.error"
+        ng-csv="::actions.getCsvRows()"
+        csv-header="::actions.getCsvFields()"
+        filename="{{vm.result.csvFileName}}"
+        quote-strings="true"
+        add-bom="true"
+        lazy-load="true"
+        title="Download CSV"
+      >file_download</i>
+
+      <button class="br-download-action bi-button bi-center" ng-if="vm.result.current.error" disabled="disabled">
+        <i
+          class="bi-icon--sm"
+          title="Download CSV"
+          disabled="disabled"
+        >file_download</i>
+      </button>
+    </span>
+
+    <div class="bi-align bi-s-h--x15 bi-muted bi-fade-in" ng-if="vm.runner.enabled || vm.result.enabled">
+      <div class="bi-c bi-fade-in" ng-if="vm.result.current.elapsedTime">
+        <span class="bi-text--sm">Elapsed time</span>
+        <div class="bi-r-i bi-align bi-s-h--x05">
+          <i class="bi-icon--xs">timer</i>
+          <b class="bi-text--sm">{{vm.result.current.elapsedTime}}</b>
+        </div>
+      </div>
+
+      <div class="bi-c bi-fade-in" ng-if="vm.result.current.finished">
+        <span class="bi-text--sm">Start time</span>
+        <div class="bi-align bi-s-h--x05">
+          <i class="bi-icon--xs">access_time</i>
+          <b class="bi-text--sm">{{vm.result.current.startTime | biDate:'HH:mm'}}</b>
+        </div>
+      </div>
+
+      <div class="bi-c bi-fade-in" ng-if="vm.result.current.getResults().bufferSize() > 0 || vm.result.enabled">
+        <span class="bi-text--sm">Rows</span>
+        <b class="bi-text--sm">{{vm.result.current.getResults().bufferSize()}}</b>
+      </div>
+
+      <div>
+        <div ng-if="vm.stats.enabled && vm.result.current.finished" ng-transclude="stats"></div>
+      </div>
+    </div>
+
+    <div class="bi-fade-in" ng-if="!vm.runner.enabled" ng-transclude="runHint"></div>
+  </div>
+
+  <div class="bi-grow" ng-transclude="controls" ng-if="runner.running && !vm.tabs.isEnabled()"></div>
+
+  <div class="br-tabs bi-r bi-fade-in" ng-if="vm.tabs.isEnabled()">
+    <div
+      class="br-tab bi-fade-in"
+      ng-class="{'bi-active': query.getId() === vm.result.current.getId()}"
+      ng-repeat="query in runner.getQueries()"
+      ng-click="events.onSelectQuery(query)"
+    >{{::query.getTitle()}}</div>
+  </div>
+
+  <i class="bi-action bi-icon bi-fade-in" ng-if="vm.result.enabled" ng-click="events.onCloseResult()">close</i>
+</div>
+
+<div 
+  class="br-result bi-c-h bi-dont-shrink bi-dont-grow"
+  ng-class="{'br-result-with-tabs': vm.tabs.isEnabled()}" ng-if="vm.result.enabled"
+>
+  <div
+    class="bi-dont-shrink bi-fade-in"
+    ng-if="vm.result.queries.get(query).enabled"
+    ng-show="query.getId() === vm.result.current.getId()"
+    ng-repeat="query in runner.getQueries()"
+  >
+    <div 
+      class="bi-c-h bi-grow"
+      ng-if="!query.getError() && query.getResults().bufferSize() > 0"
+      bi-html="renderResult(scope, query)"
+    ></div>
+
+    <div 
+      class="bi-c-h bi-grow bi-align bi-center"
+      ng-if="query.finished && !query.getError() && query.getResults().bufferSize() === 0"
+    >
+      <div class="bi-empty-state" ng-if="::runner.getMode() === 'stream'">
+        <div class="bi-empty-state-icon">
+          <i class="bi-icon">sentiment_dissatisfied</i>
+        </div>
+        <div class="bi-empty-state-header">No results</div>
+      </div>
+
+      <div class="bi-empty-state" ng-if="::runner.getMode() === 'download'">
+        <div class="bi-empty-state-icon">
+          <i class="bi-icon">file_download</i>
+        </div>
+        <div class="bi-empty-state-header">See downloaded file</div>
+        <div class="bi-empty-state-content">{{::vm.result.csvFileName}}</div>
+      </div>
+    </div>
+
+    <div 
+      class="bi-c-h bi-grow bi-align bi-center"
+      ng-if="query.finished && query.getError()"
+    >
+      <div class="bi-empty-state" ng-if="::!vm.result.queries.get(query).errorType">
+        <div class="bi-empty-state-icon">
+          <i class="bi-icon bi-danger">warning</i>
+        </div>
+
+        <pre class="bi-empty-state-content bi-danger">{{::query.getError().msg}}</pre>
+      </div>
+
+      <div class="bi-empty-state" ng-if="::vm.result.queries.get(query).errorType === 'timeout'">
+        <div class="bi-empty-state-icon">
+          <i class="bi-icon bi-danger">error_outline</i>
+        </div>
+        <div class="bi-empty-state-header">{{::options.type | biToHumanCase}} seems to be down at the moment</div>
+        <div class="bi-empty-state-content">Please try again in 5 minutes</div>
+    </div>
+  </div>
+</div>

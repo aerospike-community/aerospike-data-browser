@@ -1,0 +1,123 @@
+<div class="bi-section bi-c-h bi-grow">
+  <div class="bi-section-header">
+    <div>
+      <div class="bi-section-title bi-r-h bi-align bi-s-h bi-fade-in" ng-if="vm.state.is('Result') || vm.state.after('Result')">
+        <img
+          class="quix-user-avatar bi-fade-in"
+          ng-if="(vm.state.is('Result') || vm.state.after('Result')) && vm.state.value().folder.ownerDetails.avatar"
+          ng-src="{{::vm.state.value().folder.ownerDetails.avatar}}"
+        >
+
+        <quix-breadcrumbs
+          class="bi-dont-shrink"
+          breadcrumbs="vm.breadcrumbs"
+          quix-breadcrumbs-options="::{focusName: options.isNew}"
+          on-folder-click="events.onBreadcrumbClick(file)"
+          on-name-change="events.onNameChange(file)"
+          readonly="!permissions.rename"
+        ></bi-breadcrumbs>
+      </div>
+    </div>
+  </div>
+
+  <div class="bi-section-controls bi-fade-in" ng-if="(vm.state.is('Result') && permissions.edit) || vm.state.after('Result')">
+    <div>
+      <div class="bi-align bi-s-h bi-fade-in" ng-if="!vm.marked.enabled">
+        <button 
+          class="bi-button--primary"
+          ng-disabled="!permissions.addFolder"
+          ng-click="permissions.addFolder && events.onFolderAdd()"
+          data-hook="files-add-folder"
+        >
+          <i class="bi-icon--sm">add</i>
+          <span>Add folder</span>
+        </button>
+
+        <button 
+          class="bi-button--primary"
+          ng-disabled="!permissions.addNotebook"
+          ng-click="permissions.addNotebook && events.onNotebookAdd()"
+          data-hook="files-add-notebook"
+        >
+          <i class="bi-icon--sm">add</i>
+          <span>Add notebook</span>
+        </button>
+      </div>
+
+      <div class="bi-align bi-s-h bi-fade-in" ng-if="vm.marked.enabled">
+        <quix-actions 
+          type="item"
+          context="vm.marked.list"
+          permissions="::permissions.bulk"
+          on-delete="events.onMarkedDelete(context)"
+        ></quix-actions>
+  
+        <span class="bi-muted">{{vm.marked.list.length}} items selected</span>
+      </div>
+    </div>
+
+    <div class="bi-align bi-s-h--x2">
+      <quix-actions 
+        type="folder"
+        context="vm.state.value().folder"
+        permissions="::permissions"
+        quix-actions-options="{
+          reverse: true,
+          confirmOnDelete: vm.state.is('Content')
+        }"
+        on-like-toggle="events.onLikeToggle(context)"
+        on-share="events.onShare(context)"
+        on-delete="events.onDelete(context)"
+      ></quix-actions>
+    </div>
+  </div>
+
+  <div class="bi-section-content--center" ng-if="vm.state.before('Content')">
+    <div class="bi-empty-state--loading bi-fade-in" ng-if="vm.state.is('Initial')">
+      <div class="bi-empty-state-content">Loading notebooks...</div>
+    </div>
+
+    <div class="bi-empty-state bi-fade-in" ng-if="vm.state.is('Error')" data-hook="files-error">
+      <quix-image class="bi-empty-state-image" name="error_{{::vm.state.value().error.status}}.svg"></quix-image>
+      <div class="bi-empty-state-header">{{::vm.state.value().error.message}}</div>
+      <div class="bi-empty-state-content">
+        <a class="bi-link" ng-click="events.onGoToRootClick()">Go to my notebooks</a>
+      </div>
+    </div>
+
+    <div
+      class="bi-empty-state bi-fade-in"
+      ng-if="vm.state.is('Result')"
+      data-hook="files-empty"
+    >
+      <quix-image class="bi-empty-state-image" name="no_data.svg"></quix-image>
+
+      <div class="bi-empty-state-header">{{::isRoot ? 'You dont have any notebooks' : 'Folder is empty'}}</div>
+
+      <div class="bi-empty-state-content bi-s-h--x05">
+        <span ng-if="::!isRoot && permissions.addFolder">
+          <a class="bi-link" ng-click="events.onFolderAdd()">Add folder</a>
+          <span>or</span>
+        </span>
+
+        <a class="bi-link" ng-if="::permissions.addNotebook" ng-click="events.onNotebookAdd()">Add notebook</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="bi-section-content bi-c-h" ng-if="vm.state.is('Content')">
+    <div class="bi-panel bi-c-h bi-fade-in bi-theme--lighter" data-hook="files-content">
+      <div class="bi-panel-content bi-c-h">
+        <bi-tbl
+          class="bi-table--nav bi-c-h bi-grow"
+          fields="vm.fields"
+          rows="vm.state.value().files"
+          bt-options="::{stickyHeader: true, trackBy: 'id'}"
+          on-row-click="events.onFileClick(row)"
+          order-by="name"
+          data-hook="files-table"
+        ></bi-tbl>
+      </div>
+    </div>
+  </div>
+</div>

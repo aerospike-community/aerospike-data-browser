@@ -1,0 +1,11 @@
+@import './def/colors.def';
+@import './def/border.def';
+@import './def/section.def';
+
+.bi-section {
+  @include section($grey--100);
+}
+
+.bi-section--300 {
+  @include section-static($grey--100, 300px);
+}

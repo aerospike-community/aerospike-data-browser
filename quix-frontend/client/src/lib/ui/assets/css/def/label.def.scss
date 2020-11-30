@@ -1,0 +1,42 @@
+@import './colors.def';
+
+%label {
+  color: $grey--600;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+%color-label {
+  display: inline-flex;
+  padding: 1px 6px;
+  place-content: center;
+  border-radius: 2px;
+  font-size: 9px;
+  color: $white !important;
+}
+
+@mixin label-dark() {
+  @extend %label;
+
+  color: $grey--600;
+}
+
+@mixin label-light() {
+  color: $grey--400;
+}
+
+@mixin label-color__deep($bg-intensity) {
+  .bi-label {
+    @if $bg-intensity <= 400 {
+      @include label-dark();
+    } @else {
+      @include label-light();
+    }
+  }
+}
+
+@mixin color-label($color) {
+  @extend %color-label;
+
+  background-color: $color;
+}

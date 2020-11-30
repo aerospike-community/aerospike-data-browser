@@ -1,0 +1,36 @@
+{
+	"schemaName": "test",
+	"tableName": "presto3",
+	"columns":[
+		{
+			"name": "__key",
+			"type": "varchar",
+			"hidden": false
+		},
+		{
+			"name": "id",
+			"type": "varchar",
+			"hidden": false
+		},
+		{
+			"name": "int",
+			"type": "bigint",
+			"hidden": false
+		},
+		{
+			"name": "bin1",
+			"type": "bigint",
+			"hidden": false
+		},
+		{
+			"name": "list",
+			"type": "json",
+			"hidden": false
+		},
+		{
+			"name": "map",
+			"type": "json",
+			"hidden": false
+		}
+	]
+}

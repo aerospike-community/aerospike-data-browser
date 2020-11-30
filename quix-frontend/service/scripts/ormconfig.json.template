@@ -1,0 +1,15 @@
+{
+  "type": "mysql",
+  "host": ":dbhost:",
+  "port": :dbport:,
+  "username": ":dbuser:",
+  "password": ":dbpass:",
+  "database": ":dbname:",
+  "entities": ["src/**/*.entity{.ts,.js}"],
+  "migrations": ["./src/migrations/*.ts"],
+  "synchronize": false,
+  "cli": {
+    "migrationsDir": "./src/migrations"
+  },
+  "logging": true
+}

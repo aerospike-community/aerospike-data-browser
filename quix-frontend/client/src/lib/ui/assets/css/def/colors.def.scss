@@ -1,0 +1,64 @@
+$grey--50: #FAFAFA;
+$grey--100: #F5F5F5;
+$grey--200: #ebebec;
+$grey--300: #d7d8da;
+$grey--400: #b8babe;
+$grey--500: #9a9da2;
+$grey--600: #686b73;
+$grey--700: #494e57;
+$grey--800: #353a44;
+$grey--900: #1d242f;
+
+$blue--300: #64B5F6;
+$blue--500: #2196F3;
+
+$orange--500: #FF9800;
+
+$red--300: #E57373;
+$red--500: #f44336;
+
+$green--300: #81C784;
+$green--500: #4CAF50;
+
+$light-green--500: #8BC34A;
+
+$white: #FFFFFF;
+$black: #000000;
+$primary: #FC4A6A;
+$secondary: #00A9F4;
+$success: $light-green--500;
+$warning: $orange--500;
+$danger: $red--500;
+$muted: $grey--600;
+
+$lighter-bg: $white;
+$lighter-hover-bg: $grey--100;
+$lighter-active-bg: $grey--100;
+$lighter-color: $grey--800;
+$lighter-muted-color: $grey--600;
+$lighter-disabled-color: $grey--300;
+$lighter-border-color: $grey--200;
+
+$light-bg: $grey--100;
+$light-hover-bg: $grey--200;
+$light-active-bg: $grey--200;
+$light-color: $grey--800;
+$light-muted-color: $grey--600;
+$light-disabled-color: $grey--400;
+$light-border-color: $grey--300;
+
+$dark-bg: $grey--800;
+$dark-hover-bg: lighten($dark-bg, 2);
+$dark-active-bg: lighten($dark-bg, 2);
+$dark-color: $grey--200;
+$dark-muted-color: $grey--500;
+$dark-disabled-color: $grey--500;
+$dark-border-color: $grey--700;
+
+$darker-bg: $grey--900;
+$darker-hover-bg: $grey--800;
+$darker-active-bg: $grey--800;
+$darker-color: $grey--200;
+$darker-muted-color: $grey--500;
+$darker-disabled-color: $grey--500;
+$darker-border-color: $grey--600;

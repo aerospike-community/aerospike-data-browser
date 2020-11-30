@@ -1,0 +1,81 @@
+@import 'colors.def';
+@import 'defaults.def';
+@import 'border.def';
+
+%input {
+  @include border();
+
+  transition: border-color .2s;
+  display: inline-flex;
+  height: $default-input-height;
+  min-width: 200px;
+  padding: 6px $default-space;
+  font-family: $default-font-family;
+  font-size: $default-font-size;
+  color: $black;
+  outline: none;
+  box-sizing: border-box;
+
+  &[disabled] {
+    background-color: lighten($grey--50, 1);
+    cursor: not-allowed;
+  }
+
+  &:not([disabled]) {
+    &:hover {
+      border-color: lighten($blue--300, 20);
+    }
+
+    &:focus {
+      border-color: $blue--300;
+    }
+  }
+
+  &[required] {
+    &.ng-dirty {
+      &.ng-valid {
+        border-color: $green--300;
+      }
+
+      &.ng-invalid {
+        border-color: $red--300;
+      }
+    }
+  }
+}
+
+@mixin input($theme) {
+  @extend %input;
+
+  @if ($theme == 'lighter') {
+    color: $lighter-color;
+    background-color: $white;
+
+    &::placeholder {
+      color: $lighter-muted-color;
+    }
+  } @else if ($theme == 'light') {
+    color: $light-color;
+    background-color: $white;
+
+    &::placeholder {
+      color: $light-muted-color;
+    }
+  } @else if ($theme == 'dark') {
+    border: none;
+    color: $dark-color;
+    background-color: lighten($dark-hover-bg, 3);
+
+    &::placeholder {
+      color: $dark-muted-color;
+    }
+  } @else {
+    border: none;
+    color: $darker-color;
+    background-color: lighten($darker-hover-bg, 3);
+
+    &::placeholder {
+      color: $darker-muted-color;
+    }
+  }
+}

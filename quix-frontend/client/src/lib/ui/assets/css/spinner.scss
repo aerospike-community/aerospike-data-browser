@@ -1,0 +1,17 @@
+@import './def/spinner.def';
+
+.bi-spinner {
+  @extend %spinner;
+}
+
+.bi-spinner--sm {
+  @extend %spinner;
+
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+
+  &:after {
+    border-width: 2px;
+  }
+}
