@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   backend:
-    build: ./quix-backend/
+    image: ghcr.io/reugn/quix_backend # build: ./quix-backend/
     ports:
       - "8081:8081"
     env_file:
@@ -12,7 +12,7 @@ services:
       - AUTH_SECRET
       - AUTH_TYPE
   frontend:
-    build: ./quix-frontend/
+    image: ghcr.io/reugn/quix_frontend # build: ./quix-frontend/
     ports:
       - "3000:3000"
     depends_on:
