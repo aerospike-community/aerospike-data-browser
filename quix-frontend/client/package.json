@@ -39,9 +39,9 @@
     "@types/express-ws": "^3.0.0",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "~2.2.0",
-    "@types/node": "^8.10.59",
+    "@types/node": "^10.17.48",
     "@types/puppeteer": "^1.20.3",
-    "@types/react": "^16.9.17",
+    "@types/react": "~16.9.17",
     "chai": "~4.1.0",
     "express": "^4.16.4",
     "express-ws": "^4.0.0",
@@ -51,7 +51,10 @@
     "typescript": "~3.4.4",
     "utility-types": "^3.10.0",
     "velocity": "~0.7.0",
-    "yoshi": "^3.23.0"
+    "yoshi": "~3.23.0"
+  },
+  "resolutions": {
+    "@types/react": "~16.9.17"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
