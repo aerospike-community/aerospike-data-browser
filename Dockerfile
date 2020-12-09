@@ -56,9 +56,11 @@ RUN npm prune --production
 # ---------------------------------------------------------------------------------
 FROM ubuntu:20.04
 
+ENV PYTHONUNBUFFERED=1 \
+    DEBIAN_FRONTEND=noninteractive \
+    LANG=en_US.UTF-8
+
 # Presto
-ENV JAVA_HOME /usr/lib/jvm/zulu11
-ENV LANG en_US.UTF-8
 RUN \
     set -xeu && \
     apt-get update && \
@@ -72,10 +74,6 @@ RUN chmod -R 0777 /usr/lib/presto/bin /var/presto
 RUN apt-get -y install mysql-server
 
 # Quix backend
-ENV PYTHONUNBUFFERED=1
-ENV DEBIAN_FRONTEND noninteractive
-ENV LANG=en_US.UTF-8
-
 RUN apt-get update && \
   apt-get install -q -y --no-install-recommends \
   python3 \
