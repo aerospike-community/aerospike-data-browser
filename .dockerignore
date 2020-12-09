@@ -4,3 +4,4 @@
 */target
 *.md
 /documentation
+/presto-server-346/etc/aerospike
