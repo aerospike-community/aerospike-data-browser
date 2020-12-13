@@ -61,6 +61,8 @@ ENV PYTHONUNBUFFERED=1 \
     LANG=en_US.UTF-8
 
 # Presto
+ENV JAVA_HOME /usr/lib/jvm/zulu11
+ENV LANG en_US.UTF-8
 RUN \
     set -xeu && \
     apt-get update && \
@@ -68,7 +70,8 @@ RUN \
     mkdir -p /usr/lib/presto /data/presto /var/presto/data/var
 
 COPY ./presto-server-346 /usr/lib/presto
-RUN chmod -R 0777 /usr/lib/presto/bin /var/presto
+COPY ./presto-aerospike.properties /usr/lib/presto/etc/aerospike.properties.template
+RUN chmod -R 0777 /usr/lib/presto /var/presto
 
 # MySQL
 RUN apt-get -y install mysql-server
@@ -84,6 +87,7 @@ RUN apt-get update && \
   language-pack-en \
   build-essential \
   wget \
+  gettext\
   && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache --upgrade pip setuptools wheel py4j
