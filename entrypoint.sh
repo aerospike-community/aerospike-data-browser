@@ -15,9 +15,9 @@ echo -e "127.0.0.1 backend\n" >> /etc/hosts
 echo -e "127.0.0.1 frontend\n" >> /etc/hosts
 echo -e "127.0.0.1 presto\n" >> /etc/hosts
 
-export HOSTNAME=${HOSTNAME:-docker.for.mac.host.internal}
-export PORT=${PORT:-3000}
-export HOSTLIST=${HOSTLIST}
+export AS_HOSTNAME=${AS_HOSTNAME:-docker.for.mac.host.internal}
+export AS_PORT=${AS_PORT:-3000}
+export AS_HOSTLIST=${AS_HOSTLIST}
 export TABLE_DESC_DIR=${TABLE_DESC_DIR:-etc/aerospike}
 export SPLIT_NUMBER=${SPLIT_NUMBER:-4}
 export CACHE_TTL_MS=${CACHE_TTL_MS:-1800000}
@@ -27,11 +27,10 @@ export RECORD_KEY_NAME=${RECORD_KEY_NAME:-__key}
 export RECORD_KEY_HIDDEN=${RECORD_KEY_HIDDEN:-true}
 export ENABLE_STATISTICS=${ENABLE_STATISTICS:-false}
 export INSERT_REQUIRE_KEY=${INSERT_REQUIRE_KEY:-true}
-export CLIENT_LOG_LEVEL=${CLIENT_LOG_LEVEL:-WARN}
 
-# Fill out conffile with above values
+# Fill out configuration file with above values
 if [ -f /usr/lib/presto/etc/aerospike.properties.template ]; then
-        envsubst < /usr/lib/presto/etc/aerospike.properties.template > /usr/lib/presto/etc/catalog/aerospike.properties
+  envsubst < /usr/lib/presto/etc/aerospike.properties.template > /usr/lib/presto/etc/catalog/aerospike.properties
 fi
 
 export $(grep -v '^#' .env | xargs)
