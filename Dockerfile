@@ -61,8 +61,6 @@ ENV PYTHONUNBUFFERED=1 \
     LANG=en_US.UTF-8
 
 # Presto
-ENV JAVA_HOME /usr/lib/jvm/zulu11
-ENV LANG en_US.UTF-8
 RUN \
     set -xeu && \
     apt-get update && \
@@ -113,7 +111,7 @@ COPY --from=build2 /shared /shared
 COPY --from=build2 /service /service
 
 RUN apt-get update && \
-    apt-get -y install nodejs npm iputils-ping net-tools && \
+    apt-get -y install nodejs npm net-tools && \
     rm -f .env || true && \
     npm install -g pm2
 
