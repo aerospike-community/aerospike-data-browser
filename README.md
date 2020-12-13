@@ -1,28 +1,36 @@
-# Quix ![Support](https://img.shields.io/npm/l/@wix/quix-client) [![Build Status](https://travis-ci.com/wix/quix.svg?branch=master)](https://travis-ci.com/wix/quix) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.wix/quix-api_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.wix/quix-api_2.13)
+# Aerospike Data Browser
 
-Quix is an easy-to-use notebook manager with support for [Presto](https://wix.github.io/quix/docs/presto), [Athena](https://wix.github.io/quix/docs/athena), [BigQuery](https://wix.github.io/quix/docs/bigquery), [MySQL](https://wix.github.io/quix/docs/mysql), [PostgreSQL](https://wix.github.io/quix/docs/postgresql), [ClickHouse](https://wix.github.io/quix/docs/clickhouse) and more.
+The purpose of this project is to let users quickly browse data in Aerospike.
 
-* [Online demo](https://quix-demo.io/)
-* [Installation](https://wix.github.io/quix/docs/installation)
-
-## Intro
-Check out these blog posts introducing Quix on Wix Engineering Blog : 
-* [Introducing Quix: Presto-based Notebook Manager for Fast and Easy Data Exploration ](https://www.wix.engineering/post/introducing-quix-presto-based-notebook-manager-for-fast-and-easy-data-exploration)
-* [Quix Version 1: Now also Supporting Amazon Athena, Google BigQuery and Generic JDBC](https://www.wix.engineering/post/quix-version-1-now-also-supporting-amazon-athena-google-bigquery-and-generic-jdbc)
+## Components
+* [Quix](https://github.com/wix/quix)
+* [Presto](https://prestosql.io/)
+* [Aerospike Connect for Presto](https://github.com/citrusleaf/aerospike-connect-presto)
 
 ## Quick start
-Using `docker-compose`, this will run Quix with a MySQL container and an example Presto installation. Quix will run in a single-user mode without authentication. 
-
+Run Data Browser in a Docker container
 ```bash
-mkdir quix && cd quix
-curl https://raw.githubusercontent.com/wix/quix/master/docker-compose.prebuilt.yml -o docker-compose.yml
-curl https://raw.githubusercontent.com/wix/quix/master/env-example -o .env
-docker-compose up
+docker build . -t aerospike-data-browser
+docker run -d -p 3000:3000 -p 8081:8081 --name data-browser aerospike-data-browser
 ```
 
-Be sure to check the [full installation notes](https://wix.github.io/quix/docs/installation) on how to edit the `.env` file to add more data sources, turn on multi-user mode and customize your deployment.
+## Configuration
+Set environment variables if necessary.
 
-For support please contact us via [oss@wix.com](mailto:oss@wix.com).
+| Variable | Description | Default Value |
+| --- | --- | --- |
+| AS_HOSTNAME | Aerospike hostname. Hostname will be ignored if hostlist is specified. | docker.for.mac.host.internal |
+| AS_PORT | Aerospike port. | 3000 |
+| AS_HOSTLIST | Aerospike host list, a comma separated list of potential hosts to seed the cluster. |  |
+| TABLE_DESC_DIR | Path of the directory containing table description files. | etc/aerospike |
+| SPLIT_NUMBER | Number of Presto splits. See Parallelism section for more information. | 4 |
+| CACHE_TTL_MS | Schema inference cache TTL in milliseconds. | 1800000 |
+| DEFAULT_SET_NAME | Table name for the default set. | __default |
+| STRICT_SCHEMAS | Use a strict schema. | false |
+| RECORD_KEY_NAME | Column name for the record's primary key. | __key |
+| RECORD_KEY_HIDDEN | If set to false, the primary key column will be available in the result set. | true |
+| ENABLE_STATISTICS | Generate [statistics](https://prestosql.io/docs/current/optimizer/statistics.html) for [Cost-Based Optimization (CBO)](https://prestosql.io/docs/current/optimizer.html). Currently, the Presto connector only supports the row count. Please make sure to turn on CBO in Presto. | false |
+| INSERT_REQUIRE_KEY | Require the primary key on INSERT queries. Although we recommend that you provide a primary key, you can choose not to by setting this property to false, in which case a UUID is generated for the PK. You can view it by setting aerospike.record-key-hidden to false for future queries. | true |
 
 ## Main features
 - [Query management](#Management) - organize your notebooks in folders for easy access and sharing
