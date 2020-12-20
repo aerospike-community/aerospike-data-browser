@@ -19,17 +19,13 @@ Set environment variables if necessary.
 
 | Variable | Description | Default Value |
 | --- | --- | --- |
-| AS_HOSTNAME | Aerospike hostname. Hostname will be ignored if hostlist is specified. | docker.for.mac.host.internal |
-| AS_PORT | Aerospike port. | 3000 |
 | AS_HOSTLIST | Aerospike host list, a comma separated list of potential hosts to seed the cluster. |  |
-| TABLE_DESC_DIR | Path of the directory containing table description files. | etc/aerospike |
+| TABLE_DESC_DIR | Path of the directory containing table description files. | /usr/lib/presto/etc/aerospike |
 | SPLIT_NUMBER | Number of Presto splits. See Parallelism section for more information. | 4 |
 | CACHE_TTL_MS | Schema inference cache TTL in milliseconds. | 1800000 |
 | DEFAULT_SET_NAME | Table name for the default set. | __default |
-| STRICT_SCHEMAS | Use a strict schema. | false |
 | RECORD_KEY_NAME | Column name for the record's primary key. | __key |
 | RECORD_KEY_HIDDEN | If set to false, the primary key column will be available in the result set. | true |
-| ENABLE_STATISTICS | Generate [statistics](https://prestosql.io/docs/current/optimizer/statistics.html) for [Cost-Based Optimization (CBO)](https://prestosql.io/docs/current/optimizer.html). Currently, the Presto connector only supports the row count. Please make sure to turn on CBO in Presto. | false |
 | INSERT_REQUIRE_KEY | Require the primary key on INSERT queries. Although we recommend that you provide a primary key, you can choose not to by setting this property to false, in which case a UUID is generated for the PK. You can view it by setting aerospike.record-key-hidden to false for future queries. | true |
 
 ## Main features
