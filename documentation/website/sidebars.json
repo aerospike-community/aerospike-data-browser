@@ -1,7 +1,0 @@
-{
-  "docs": {
-    "Introduction": ["about", "architecture"],
-    "Getting Started": ["installation"],
-    "Supported datasources": ["athena", "bigquery", "clickhouse", "jdbc", "mariadb", "mysql", "oracle", "postgresql", "presto", "python", "redshift"]
-  }
-}
