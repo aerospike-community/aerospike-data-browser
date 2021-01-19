@@ -36,9 +36,9 @@ Below is the list of environment variables you can specify to configure the data
 | AS_HOSTLIST | Aerospike host list, a comma separated list of potential hosts to seed the cluster. |  |
 | TABLE_DESC_DIR | Path of the directory containing table description files. | /usr/lib/presto/etc/aerospike |
 | SPLIT_NUMBER | Number of Presto splits. See Parallelism section for more information. | 4 |
-| CACHE_TTL_MS | Schema inference cache TTL in milliseconds. | 1800000 |
-| DEFAULT_SET_NAME | Table name for the default set. | __default |
-| RECORD_KEY_NAME | Column name for the record's primary key. | __key |
+| CACHE_TTL_MS | Number of milliseconds to keep the inferred schema cached. Data browser uses heuristics to rapidly infer schema of the data stored in Aerospike. | 1800000 |
+| DEFAULT_SET_NAME | Table name for the default set. This is used when your namespace has a null set or no sets. | __default |
+| RECORD_KEY_NAME | Column name for the record's primary key. Use this in the WHERE clause for queries involving primary key (PK) comparisons. | __key |
 | RECORD_KEY_HIDDEN | If set to false, the primary key column will be available in the result set. | true |
 | INSERT_REQUIRE_KEY | Require the primary key on INSERT queries. Although we recommend that you provide a primary key, you can choose not to by setting this property to false, in which case a UUID is generated for the PK. You can view it by setting aerospike.record-key-hidden to false for future queries. | true |
 
