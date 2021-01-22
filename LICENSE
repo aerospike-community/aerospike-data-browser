@@ -1,21 +1,101 @@
-MIT License
+                        License Agreement for Aerospike Data Browser
 
-Copyright (c) 2020 Aerospike, Inc.
+1.  PURPOSE
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Subject to the terms and conditions hereof, Licensee wishes to use the Product (as defined below)
+    for the limited purposes of testing, development, or pre-production use only.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2.  GRANT OF LICENSE
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    2.1 "Products" means, collectively, all modules of the Aerospike Data Browser, together with
+        related documentation, including updates, modifications, or new releases thereof which may be
+        provided by the Company to Licensee from time to time.
+
+    2.2 Company hereby grants to Licensee a non-exclusive, non-transferable, non-sublicensable license
+        (the “License”) to use the Products internally strictly for non-production uses. Licensee may
+        not sublicense, assign, or otherwise transfer any of its rights in this License.
+
+    2.3 Licensee acknowledges that the Product includes certain open source components that are not
+        licensed under the terms of this Agreement but are instead licensed under an applicable open
+        source copy-right license agreement.
+
+3.  OWNERSHIP OF PRODUCTS
+
+    Licensee acknowledges that, as between the parties, Company retains sole right, title and interest
+    in and to the: (i) Products, (ii) all copyrights and other intellectual property rights with
+    respect to the Products, and (iii) suggestions made by Licensee for the Products, even if such
+    suggestions are incorporated into subsequent versions of the Products (and Licensee hereby assigns
+    all such suggestions and any intellectual property rights therein to Company).
+
+4.  SUPPORT AND MAINTENANCE
+
+    Aerospike shall provide best-effort support and maintenance services that excludes any SLAs and
+    escalation paths, to Enterprise Edition (EE) licensees, and community support via Aerospike
+    community forum to Community Edition (CE) licensees.
+
+5.  RESTRICTIONS
+
+    Licensee may use the Products in machine-readable form only and agrees not to
+    (and not to allow any third party to):
+    (i) reverse engineer, decompile or disassemble the Products or otherwise attempt to discover any
+        source code or underlying ideas or algorithms of any software contained or incorporated therein
+        (except to the extent such restriction is prohibited by applicable law);
+    (ii) modify nor create a derivative work of any part of the Products, nor remove any product
+        identification, copyright or other notices;
+    (iii) provide, lease, lend, disclose, use for time
+        sharing or service bureau purposes, or otherwise use or allow others to use for the benefit of
+        any third party, any Product.  If Company delivers an upgrade or maintenance release update of
+        any Product, Licensee agrees to destroy and not use, nor permit the use of, any previous copy of
+        such Product except during the limited conversion period identified by Company at the time of
+        such delivery.
+
+6.  WARRANTY DISCLAIMER
+
+    ALL PRODUCTS ARE PROVIDED “AS IS” AND COMPANY HEREBY EXPRESSLY DISCLAIMS ALL WARRANTIES OF ANY KIND,
+    EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+7.  CONFIDENTIALITY
+
+    Licensee understands that Company has disclosed or may disclose information relating to Company’s
+    technology or business, including, without limitation, the Products and any other software,
+    documentation, updates, modifications, or new releases thereof and the existence, terms and
+    conditions of this Agreement (hereinafter collectively referred to as “Proprietary Information”).
+    Licensee agrees:
+    (i) not to divulge to any third person any such Proprietary Information,
+    (ii) to give access to such Proprietary Information solely to those employees with a need to have
+        access thereto for purposes of this Agreement, and
+    (iii) to take the same security precautions to protect against disclosure or unauthorized use of
+        such Proprietary Information that Licensee takes with its own proprietary information, but in no
+        event will Licensee apply less than reasonable precautions to protect such Proprietary Information.
+        Nothing in this Agreement will prevent Licensee from disclosing the Proprietary Information pursuant
+        to any judicial or governmental order, provided that Licensee gives Company reasonable prior notice
+        of such disclosure to contest such order.
+
+8.  LIMITATION OF LIABILITY
+
+    IN NO EVENT WILL COMPANY BE LIABLE UNDER ANY LEGAL OR EQUITABLE THEORY FOR (I) ANY LOST PROFITS OR
+    INDIRECT, INCIDENTAL, CONSEQUENTIAL, PUNITIVE, SPECIAL OR OTHER DAMAGES OF ANY KIND WHATSOEVER,
+    OR (II) ANY DIRECT DAMAGES IN EXCESS (IN THE AGGREGATE) OF THE FEES PAID TO COMPANY HEREUNDER,
+    IN EACH CASE RESULTING FROM OR IN CONNECTION WITH THIS AGREEMENT, WHETHER IN AN ACTION BASED ON
+    CONTRACT OR TORT, INCLUDING NEGLIGENCE OR STRICT LIABILITY, AND EVEN IF COMPANY HAS BEEN ADVISED
+    OF THE POSSIBILITY OF SUCH DAMAGES.
+
+9.  TERMINATION
+
+    Aerospike may terminate this Agreement at any time with or without cause.  Upon any termination of
+    this Agreement, only the License to use the Products, and the limited permission to make a copy, will
+    terminate, and all other rights and obligations will survive such termination.
+
+10. MISCELLANEOUS
+
+    This Agreement contains the entire agreement of the parties with respect to the subject matter hereof,
+    and supersedes all prior oral and written agreements, negotiations, understandings and communications
+    regarding such subject matter.  If any of the provisions of this Agreement are invalid under any
+    applicable law, they are, to that extent, deemed omitted, and the balance of this Agreement will be
+    enforceable in accordance with its terms.  Neither this Agreement nor the license granted hereunder
+    are assignable or transferable (and any attempt to do so shall be void); provided that Aerospike may
+    assign or transfer all of its rights and obligations under this Agreement to a successor-in-interest
+    in connection with a sale of all or substantially all of Aerospike’s business relating to this Agreement.
+    This Agreement will be governed by the laws of the State of California, without regard to the conflict
+    of laws provisions thereof.
