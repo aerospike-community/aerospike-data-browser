@@ -114,6 +114,3 @@ You can also visualize the data using the charting capabilities built into the Q
 Finally, you can run [aggregate functions](https://prestosql.io/docs/current/functions/aggregate.html) for descriptive analytics. For example,
 
 ![](documentation/assets/query-editor-4.png)
-
-## License
-MIT
