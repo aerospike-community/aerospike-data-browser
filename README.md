@@ -27,8 +27,12 @@ Run the docker command:
 docker build . -t aerospike-data-browser
 docker run -d -p 3000:3000 -p 8081:8081 --name data-browser aerospike-data-browser
 ```
+OR if you choose not to build, but rather use the image from docker hub:
+```bash
+docker run -d -p 3000:3000 -p 8081:8081 --name data-browser reugn/aerospike-data-browser
+```
 
-Quix runs on port 3000 by default, hence launch the Aerospike server on the 3300 port if you are planning to run both on the localhost.
+Quix runs on port 3000 by default, hence launch the Aerospike server on any other port e.g. 3300 if you are planning to run both on the localhost.
 Below is the list of environment variables you can specify to configure the data browser using the [-e](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) option.
 
 | Variable | Description | Default Value |
