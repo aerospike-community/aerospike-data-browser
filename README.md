@@ -118,3 +118,5 @@ You can also visualize the data using the charting capabilities built into the Q
 Finally, you can run [aggregate functions](https://prestosql.io/docs/current/functions/aggregate.html) for descriptive analytics. For example,
 
 ![](documentation/assets/query-editor-4.png)
+
+As next steps, you can browse data in Aerospike and run SQL statements against it by referring to the [examples](https://aerospike.com/docs/connect/access/presto/examples.html) here.
