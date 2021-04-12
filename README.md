@@ -4,7 +4,7 @@ Aerospike data browser is a stand-alone desktop application that lets you discov
 
 ## Salient Features
 * View namespace/set/schema of data stored in Aerospike, without the need to know the schema apriori.
-* Run ANSI SQL queries for data exploration, including [aggregate functions](https://prestosql.io/docs/current/functions/aggregate.html) for descriptive analytics.
+* Run ANSI SQL queries for data exploration, including [aggregate functions](https://trino.io/docs/current/functions/aggregate.html) for descriptive analytics.
 * Visualize data.
 
 **Note:** The data browser is not an analytics tool and should not be used for complex analysis of large datasets.
@@ -12,7 +12,7 @@ Aerospike data browser is a stand-alone desktop application that lets you discov
 ## Architecture
 ![](documentation/assets/data-browser-architecture.png)
 
-It is a stack combining Quix, [Presto](https://prestosql.io/), and the [Aerospike Connector for Presto](https://www.aerospike.com/docs/connect/access/presto/index.html#), and is dockerized.
+It is a stack combining Quix, [Presto](https://trino.io/), and the [Aerospike Connector for Presto](https://www.aerospike.com/docs/connect/access/presto/index.html#), and is dockerized.
 The Quix UI provides a DB Explorer and a SQL editor, in addition to a notebook manager for managing your notebooks.
 Presto exposes a JDBC interface to Quix and uses the Aerospike Connector to translate SQL queries into API calls to the DB. 
 
@@ -115,6 +115,6 @@ You can also visualize the data using the charting capabilities built into the Q
 
 ![](documentation/assets/query-editor-3.png)
 
-Finally, you can run [aggregate functions](https://prestosql.io/docs/current/functions/aggregate.html) for descriptive analytics. For example,
+Finally, you can run [aggregate functions](https://trino.io/docs/current/functions/aggregate.html) for descriptive analytics. For example,
 
 ![](documentation/assets/query-editor-4.png)
