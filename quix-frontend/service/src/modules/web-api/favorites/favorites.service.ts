@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
-import {IFile, FileType} from 'shared';
-import {DbNotebook, DbFavorites, DbUser} from 'entities';
-import {extractOwnerDetails} from 'entities/utils';
+import {IFile, FileType} from '@wix/quix-shared';
+import {DbNotebook, DbFavorites, DbUser} from '../../../entities';
+import {extractOwnerDetails} from '../../../entities/utils';
 
 type GetFavoritesQueryReturnValue = DbFavorites & {
   notebook: DbNotebook;
@@ -39,7 +39,7 @@ export class FavoritesService {
   async getFavoritesForUser(user: string): Promise<IFile[]> {
     const favoritesQuery = this.favoritesRepo
       .createQueryBuilder('fav')
-      .leftJoinAndMapOne(
+      .innerJoinAndMapOne(
         'fav.notebook',
         DbNotebook,
         'notebook',
@@ -55,6 +55,7 @@ export class FavoritesService {
       .orderBy({'notebook.name': 'ASC'});
 
     const res = (await favoritesQuery.getMany()) as GetFavoritesQueryReturnValue[];
+
     return res.map(favoriteToIFile);
   }
 }

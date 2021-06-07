@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {EnvSettings} from 'config';
-import {ConfigService} from 'config';
+import {EnvSettings} from '../config';
+import {ConfigService} from '../config';
 import {sanitizeUserEmail, sanitizeUserName} from './user-sanitizer';
-import {IUser} from 'shared';
+import {IUser} from '@wix/quix-shared';
 
 @Injectable()
 export class DemoModeInterceptor implements NestInterceptor {
@@ -31,7 +31,7 @@ function removeOwnerNested(user: string, item: any): any {
   if (Array.isArray(item)) {
     return item.map(removeOwnerNested.bind(null, user));
   }
-  if (typeof item === 'object') {
+  if (item && typeof item === 'object') {
     if (item.owner) {
       item.owner = item.owner === user ? user : sanitizeUserEmail(item.owner);
     }

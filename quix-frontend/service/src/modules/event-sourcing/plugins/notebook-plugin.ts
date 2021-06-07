@@ -1,18 +1,18 @@
 import {Injectable} from '@nestjs/common';
 import {InjectEntityManager} from '@nestjs/typeorm';
-import {DbFavorites, DbFileTreeNode, DbNotebook} from 'entities';
-import {FileTreeRepository} from 'entities/filenode/filenode.repository';
+import {DbFavorites, DbFileTreeNode, DbNotebook} from '../../../entities';
+import {FileTreeRepository} from '../../../entities/filenode/filenode.repository';
 import {
   convertDbNotebook,
   covertNotebookToDb,
-} from 'entities/notebook/dbnotebook.entity';
+} from '../../../entities/notebook/dbnotebook.entity';
 import {last} from 'lodash';
-import {FileType} from 'shared/entities/file';
+import {FileType} from '@wix/quix-shared/entities/file';
 import {
   NotebookActions,
   NotebookActionTypes,
   notebookReducer,
-} from 'shared/entities/notebook';
+} from '@wix/quix-shared/entities/notebook';
 import {EntityManager} from 'typeorm';
 import {EventBusPlugin, EventBusPluginFn} from '../infrastructure/event-bus';
 import {IAction} from '../infrastructure/types';
@@ -74,7 +74,7 @@ export class NotebookPlugin implements EventBusPlugin {
     const newModel = notebookReducer(model, action);
 
     if (newModel && model !== newModel) {
-      return tm.save(covertNotebookToDb(newModel));
+      return tm.save(covertNotebookToDb(newModel), {reload: false});
     } else if (action.type === NotebookActionTypes.deleteNotebook) {
       await tm.delete(DbNotebook, {id: action.id});
     }
@@ -96,7 +96,9 @@ export class NotebookPlugin implements EventBusPlugin {
         node.type = FileType.notebook;
         node.parent = parent ? new DbFileTreeNode(parent.id) : undefined;
 
-        return tm.getCustomRepository(FileTreeRepository).save(node);
+        return tm
+          .getCustomRepository(FileTreeRepository)
+          .save(node, {reload: false});
       }
     }
   }

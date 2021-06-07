@@ -1,22 +1,18 @@
 import {
   Column,
-  Entity,
-  Index,
-  PrimaryColumn,
-  OneToOne,
-  JoinColumn,
-  UpdateDateColumn,
   CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import {dbConf} from '../../config/db-conf';
-import {DbFileTreeNode} from '../filenode/filenode.entity';
 
 @Entity({name: 'folders'})
 export class DbFolder {
   @PrimaryColumn({...dbConf.idColumn})
   id!: string;
 
-  @Column(dbConf.shortTextField)
+  @Column(dbConf.nameField)
   name!: string;
 
   @Column(dbConf.shortTextField)

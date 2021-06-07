@@ -27,7 +27,7 @@
       is-maximized="vm.isMaximized"
       on-toggle="events.onMaximizeToggle(maximized)"
     >
-      <div class="bi-panel-header bi-hover-parent">
+      <div class="bi-panel-header bi-hover-parent" ng-class="::{'quix-note-hidden-editor': !options.showEditor}">
         <span
           class="quix-note-drag-handle quix-note-drag-indicator bi-hover-target"
           ng-if="permissions.reorder && !vm.isMaximized"
@@ -60,87 +60,55 @@
           ng-class="{'bi-hover-target': bf.fold}"
           bf-toggle
         >
-          <quix-meta entity="note"></quix-meta>
+          <quix-meta ng-if="::options.showDates" entity="note"></quix-meta>
 
-          <quix-actions
-            type="note"
-            context="note"
-            permissions="::permissions"
-            quix-actions-options="{reverse: true, compact: true}"
-            on-share="events.onShare(context)"
-            on-clone="events.onClone(context)"
-            on-delete="events.onDelete(context)"
-          ></quix-actions>
+          <div class="bi-align bi-s-h">
+            <bi-tooltip ng-if="::permissions[action.permissions]" ng-repeat="action in ::vm.customActions">
+              <bi-toggle>
+                <i 
+                  class="bi-action bi-icon--sm"
+                  ng-click="$event.stopPropagation(); events.onCustomAction(action)"
+                >{{::action.icon}}</i>
+              </bi-toggle>
+              {{::action.title}}
+            </bi-tooltip>
+
+            <quix-actions
+              type="note"
+              context="note"
+              permissions="::permissions"
+              quix-actions-options="{reverse: true, compact: true}"
+              on-share="events.onShare(context)"
+              on-clone="events.onClone(context)"
+              on-delete="events.onDelete(context)"
+            ></quix-actions>
+          </div>
         </div>
       </div>
 
-      <div 
+      <div
         class="bi-panel-content bi-c-h bi-grow bi-fade-in"
         ng-if="!bf.fold"
       >
-        <bi-sql-runner
+        <quix-runner
           class="bi-c-h bi-grow"
-          ng-if="::vm.engine !== 'python'"
-          ng-model="note.content"
-          ng-change="events.onContentChange()"
-          bsr-options="::{
-            fitContent: true,
-            params: true,
-            focus: options.focusEditor,
-            showSyntaxErrors: vm.showSyntaxErrors,
-            shareParams: true,
-            autoRun: options.autoRun,
-            dateFormat: vm.dateFormat
-          }"
-          type="vm.type"
+          type="::vm.type"
           runner="runner"
-          download-file-name="getDownloadFileName(query)"
+          quix-runner-options="::options"
+          text-content="note.content"
+          rich-content="note.richContent"
+          get-download-file-name="getDownloadFileName(query)"
+          render-stats="renderStats()"
+          on-content-change="events.onContentChange(textContent, richContent)"
           on-save="events.onSave()"
           on-run="events.onRun()"
-          on-editor-load="events.onEditorInstanceLoad(instance)"
-          on-runner-load="events.onRunnerInstanceLoad(instance)"
+          on-editor-instance-load="events.onEditorInstanceLoad(instance)"
+          on-runner-instance-load="events.onRunnerInstanceLoad(instance)"
           on-runner-created="events.onRunnerCreated(runner)"
           on-runner-destroyed="events.onRunnerDestroyed(runner)"
           on-params-share="events.onShare(note, params)"
           readonly="!permissions.edit"
-        >
-          <controls>
-            <quix-npc></quix-npc>
-          </controls>
-
-          <stats class="bi-align bi-s-h--x15" bi-html="renderStats()"></stats>
-        </bi-sql-runner>
-
-        <bi-python-runner
-          class="bi-c-h bi-grow"
-          ng-if="::vm.engine === 'python'"
-          ng-model="note.content"
-          ng-change="events.onContentChange()"
-          bpr-options="::{
-            fitContent: true,
-            params: true,
-            focus: options.focusEditor,
-            showSyntaxErrors: vm.showSyntaxErrors,
-            shareParams: true,
-            autoRun: options.autoRun,
-            dateFormat: vm.dateFormat
-          }"
-          type="vm.type"
-          runner="runner"
-          download-file-name="getDownloadFileName(query)"
-          on-save="events.onSave()"
-          on-run="events.onRun()"
-          on-editor-load="events.onEditorInstanceLoad(instance)"
-          on-runner-load="events.onRunnerInstanceLoad(instance)"
-          on-runner-created="events.onRunnerCreated(runner)"
-          on-runner-destroyed="events.onRunnerDestroyed(runner)"
-          on-params-share="events.onShare(note, params)"
-          readonly="!permissions.edit"
-        >
-          <controls>
-            <quix-npc></quix-npc>
-          </controls>
-        </bi-python-runner>
+        ></quix-runner>
       </div>
     </div>
   </bi-foldable>

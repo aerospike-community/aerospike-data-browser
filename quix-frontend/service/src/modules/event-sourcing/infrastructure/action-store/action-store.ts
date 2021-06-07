@@ -5,7 +5,6 @@ import {IActionStore, IDBAction} from './types';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Injectable} from '@nestjs/common';
 
-// TODO: benchmark
 const convertDbActionToAction = (input: IDBAction): IAction => {
   const {data, ...rest} = input;
   return {...rest, ...data};
@@ -13,7 +12,14 @@ const convertDbActionToAction = (input: IDBAction): IAction => {
 
 const convertActionToDbAction = (input: IAction): IDBAction => {
   const {id, dateCreated, type, user, ...rest} = input;
-  return {data: rest, id, type, user};
+  return {
+    data: rest,
+    id,
+    type,
+    user,
+    dateCreated: input.dateCreated || new Date(),
+  }; // TODO: fix me, happens because of typeorm change
+  // Prefer to use db default value time rather than setting it in app
 };
 
 @Injectable()
@@ -22,7 +28,15 @@ export class DbActionStore implements IActionStore {
 
   async pushAction(action: IAction | IAction[]) {
     const actions: IAction[] = Array.isArray(action) ? action : [action];
-    await this.repo.save(actions.map(convertActionToDbAction));
+
+    // not using simple .insert() or .save() to suppress excessive select typeorm does
+    await this.repo
+      .createQueryBuilder()
+      .insert()
+      .values(actions.map(convertActionToDbAction))
+      .updateEntity(false)
+      .execute();
+    // await this.repo.insert(actions.map(convertActionToDbAction));
     return actions;
   }
 

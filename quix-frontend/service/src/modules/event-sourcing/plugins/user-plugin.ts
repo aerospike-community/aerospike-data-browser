@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {DbUser, userToDbUser} from 'entities/user/user.entity';
-import {UserActions, UserActionTypes} from 'shared/entities/user';
+import {DbUser, userToDbUser} from '../../../entities/user/user.entity';
+import {UserActions, UserActionTypes} from '@wix/quix-shared/entities/user';
 import {Repository} from 'typeorm';
 import {EventBusPlugin, EventBusPluginFn} from '../infrastructure/event-bus';
 import {IAction} from '../infrastructure/types';
@@ -38,12 +38,19 @@ export class UserPlugin implements EventBusPlugin {
         switch (action.type) {
           case UserActionTypes.createNewUser: {
             const dbUser = userToDbUser(action.newUser);
-            return this.userRepository.save(dbUser);
+            return this.userRepository.insert(dbUser);
           }
           case UserActionTypes.updateUser: {
-            const {id, avatar, email, name} = action;
-            const dbUser = new DbUser({id, avatar, name});
-            return this.userRepository.save(dbUser);
+            const {id, avatar, email, name, changeUserCreated} = action;
+            const dbUser = new DbUser({
+              id,
+              avatar,
+              name,
+            });
+            if (changeUserCreated) {
+              dbUser.dateCreated = changeUserCreated.valueOf();
+            }
+            return this.userRepository.save(dbUser, {reload: false});
           }
         }
       },

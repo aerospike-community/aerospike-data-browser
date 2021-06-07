@@ -3,16 +3,18 @@
 
 import {TestingModule} from '@nestjs/testing';
 import 'reflect-metadata';
-import {INote, NoteActions, createNote} from 'shared/entities/note';
-import {NoteActionT} from 'shared/entities/note/actions';
-import {NotebookActions} from 'shared/entities/notebook';
-import {FileActions, FileType} from 'shared/entities/file';
+import {INote, NoteActions, createNote} from '@wix/quix-shared/entities/note';
+import {NoteActionT} from '@wix/quix-shared/entities/note/actions';
+import {NotebookActions} from '@wix/quix-shared/entities/notebook';
+import {FileActions, FileType} from '@wix/quix-shared/entities/file';
 import {QuixEventBus} from './quix-event-bus';
 import {QuixEventBusDriver} from './quix-event-bus.driver';
 import {range, reject, find} from 'lodash';
-import {EntityType} from 'common/entity-type.enum';
+import {EntityType} from '../../common/entity-type.enum';
 import {MockDataBuilder} from 'test/builder';
 import {IAction} from './infrastructure/types';
+import {UserActions} from '@wix/quix-shared';
+import {emit} from 'process';
 
 jest.setTimeout(300000);
 
@@ -571,6 +573,33 @@ describe('event sourcing', () => {
       await driver
         .getFavorite(defaultUser, notebookId, EntityType.Notebook)
         .and.expectToBeUndefined();
+    });
+  });
+
+  describe('user list::', () => {
+    it('should add user with dateCreated in the past', async () => {
+      const createAction = UserActions.createNewUser('foo', {
+        avatar: '',
+        dateCreated: 1000,
+        dateUpdated: 1000,
+        email: 'foo',
+        id: 'foo',
+        name: '',
+        rootFolder: '',
+      });
+      await driver.emitAsUser(eventBus, [createAction], 'foo');
+      const users = await driver.getUsers();
+      expect(users[0]).toMatchObject({dateCreated: 1000, dateUpdated: 1000});
+    });
+  });
+
+  describe('error handling::', () => {
+    it('should throw an error on invalid action', async () => {
+      const error = await driver
+        .emitAsUser(eventBus, [{type: 'foo'}])
+        .catch(e => e);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      expect(error instanceof Error).toBe(true);
     });
   });
 });

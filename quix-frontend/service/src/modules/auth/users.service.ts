@@ -1,13 +1,13 @@
 import {Injectable, Logger} from '@nestjs/common';
-import {QuixEventBus} from 'modules/event-sourcing/quix-event-bus';
+import {QuixEventBus} from '../../modules/event-sourcing/quix-event-bus';
 import {Repository} from 'typeorm';
-import {DbUser} from 'entities';
+import {DbUser} from '../../entities';
 import {InjectRepository} from '@nestjs/typeorm';
-import {dbUserToUser} from 'entities/user/user.entity';
-import {IGoogleUser} from './types';
-import {FileActions, createFolder} from 'shared/entities/file';
+import {dbUserToUser} from '../../entities/user/user.entity';
+import {IExternalUser} from './types';
+import {FileActions, createFolder} from '@wix/quix-shared/entities/file';
 import uuid from 'uuid/v4';
-import {UserActions, createUser} from 'shared/entities/user';
+import {UserActions, createUser} from '@wix/quix-shared/entities/user';
 
 @Injectable()
 export class UsersService {
@@ -18,16 +18,16 @@ export class UsersService {
     private quixEventBus: QuixEventBus,
   ) {}
 
-  async doUserLogin(userFromLogin: IGoogleUser) {
-    const user = await this.userRepo.count({id: userFromLogin.email});
+  async doUserLogin(userFromLogin: IExternalUser) {
+    const user = await this.userRepo.findOne({id: userFromLogin.email});
     if (!user) {
       await this.doFirstTimeLogin(userFromLogin);
     } else {
-      await this.doLogin(userFromLogin);
+      await this.doLogin(userFromLogin, user);
     }
   }
 
-  private async doFirstTimeLogin(userFromLogin: IGoogleUser) {
+  private async doFirstTimeLogin(userFromLogin: IExternalUser) {
     const rootFolderId = await this.createRootFolder(userFromLogin.email);
     const {avatar, email: id, email, name} = userFromLogin;
     const user = createUser({
@@ -45,10 +45,21 @@ export class UsersService {
     });
   }
 
-  private async doLogin(userFromLogin: IGoogleUser) {
+  private async doLogin(userFromLogin: IExternalUser, dbUser: DbUser) {
     const {avatar, name, email: id, email} = userFromLogin;
+    /* small hack when migrating users, creating users with epoch 1000 (1970-01-01 00:00:01) */
+    /* once they login, change dateCreated */
+    const changeUserCreated =
+      dbUser.dateCreated.valueOf() === 1000 ? new Date() : undefined;
+
     return this.quixEventBus.emit({
-      ...UserActions.updateUser(id, avatar || '', name || '', email),
+      ...UserActions.updateUser(
+        id,
+        avatar || '',
+        name || '',
+        email,
+        changeUserCreated,
+      ),
       user: id,
       ethereal: true,
     });

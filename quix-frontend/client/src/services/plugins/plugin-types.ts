@@ -1,5 +1,14 @@
-import {IFile, TModuleComponentType, ModuleEngineType} from '@wix/quix-shared';
+import {IFile, TModuleComponentType, ModuleEngineType, INote} from '@wix/quix-shared';
+import { Time } from '../../config';
 import {App} from '../../lib/app';
+import formatter from '../../lib/sql-formatter/sqlFormatter';
+
+interface CustomAction {
+  icon: string;
+  title: string;
+  permissions: string;
+  handler(note: INote): INote;
+}
 
 export const resolvePluginType = (type: TModuleComponentType) => {
   if (PluginMap[type]) {
@@ -35,62 +44,78 @@ export class NotePlugin extends Plugin {
     private readonly config: {
       syntaxValidation: boolean;
       canCreate: boolean;
+      dateFormat?: string;
+      enableQueryFormatter?: boolean;
     },
   ) {
     super(app, id, engine, hooks);
-  }
 
-  getRunnerType() {
-    return this.getId();
+    this.config.dateFormat = this.config.dateFormat || Time.Format;
   }
 
   getConfig() {
     return this.config;
   }
 
-  getDateFormat() {
-    return 'YYYY/MM/DD HH:mm';
-  }
-
   formatStats(stats: {[key: string]: any}) {
     return [];
   }
 
-  renderNote(scope: any) {
+  renderRunner() {
     return `
       <bi-sql-runner
-        class="bi-c-h bi-grow"
-        ng-if="::vm.engine !== 'python'"
-        ng-model="note.content"
-        ng-change="events.onContentChange()"
+        class="bi-c-h bi-grow bi-fade-in"
+        ng-model="textContent"
+        ng-change="events.onContentChange(textContent)"
         bsr-options="::{
           fitContent: true,
           params: true,
           focus: options.focusEditor,
+          showEditor: options.showEditor,
           showSyntaxErrors: vm.showSyntaxErrors,
-          shareParams: true,
+          shareParams: options.shareParams,
           autoRun: options.autoRun,
           dateFormat: vm.dateFormat
         }"
         type="vm.type"
         runner="runner"
-        download-file-name="getDownloadFileName(query)"
+        download-file-name="actions.getDownloadFileName(query)"
+        table-formatter="tableFormatter()"
         on-save="events.onSave()"
         on-run="events.onRun()"
         on-editor-load="events.onEditorInstanceLoad(instance)"
         on-runner-load="events.onRunnerInstanceLoad(instance)"
         on-runner-created="events.onRunnerCreated(runner)"
         on-runner-destroyed="events.onRunnerDestroyed(runner)"
-        on-params-share="events.onShare(note, params)"
-        readonly="!permissions.edit"
+        on-params-share="events.onParamsShare(params)"
+        readonly="readonly"
       >
         <controls>
           <quix-npc></quix-npc>
         </controls>
 
-        <stats class="bi-align bi-s-h--x15" bi-html="renderStats()"></stats>
+        <stats class="bi-align bi-s-h--x15" bi-html="actions.renderStats()"></stats>
       </bi-sql-runner>
     `;
+  }
+
+  getCustomActions(): CustomAction[] {
+    const res: CustomAction[] = [];
+
+    if (this.config.enableQueryFormatter) {
+      res.push({
+        icon: 'format_paint',
+        title: 'Format query',
+        permissions: 'edit',
+        handler: (note: INote) => {
+          note.content = formatter.format(note.content, {upperCase: true, language: 'quixsql'});
+  
+          return note;
+        }
+      })
+    }
+
+    return res;
   }
 }
 

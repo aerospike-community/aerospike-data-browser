@@ -1,21 +1,14 @@
-import { IHistory } from '@wix/quix-shared';
-import biRelativeDate from '../../lib/ui/filters/relative-date';
 import * as React from 'react';
-import { RowConfig } from '../../lib/ui/components/Table';
-
-interface HighlightedRowConfig<T> extends RowConfig<T> {
-  filter?(
-    value,
-    item: T,
-    index,
-    highlight?: (string) => React.ReactNode
-  ): React.ReactNode;
-}
+import { IHistory } from '@wix/quix-shared';
+import relativeDate from '../../lib/ui/filters/relative-date';
+import absoluteDate from '../../lib/ui/filters/absolute-date';
+import toHumanCase from '../../lib/ui/filters/to-human-case';
+import { HighlightedRowConfig } from '../../lib/ui/components/table/TableRow';
 
 export const historyTableFields: HighlightedRowConfig<IHistory>[] = [
   {
     name: 'email',
-    title: 'Email',
+    title: 'User',
     filter(_, history: IHistory, index, highlight) {
       return <span>{highlight(history.email)}</span>;
     }
@@ -27,16 +20,20 @@ export const historyTableFields: HighlightedRowConfig<IHistory>[] = [
       const hasQuery = history.query.length > 0;
       const fullQuery = hasQuery ? history.query.join(';\n') + ';' : '';
 
-      return <pre title={fullQuery}>{highlight(fullQuery)}</pre>;
+      return (
+        <span className="bi-muted bi-text--sm">
+          {highlight(fullQuery)}
+        </span>
+      )
     }
   },
   {
     name: 'moduleType',
-    title: 'Note Type',
+    title: 'Type',
     filter(_, history: IHistory, index, highlight) {
       return (
-        <span className='bi-muted'>
-          {highlight(history.moduleType)}
+        <span className="bi-tag--sm">
+          {highlight(toHumanCase()(history.moduleType))}
         </span>
       );
     }
@@ -46,9 +43,15 @@ export const historyTableFields: HighlightedRowConfig<IHistory>[] = [
     title: 'Started At',
     filter(_, history: IHistory, index) {
       return (
-        <span className='bi-text--sm bi-muted'>
-          {biRelativeDate()(history.startedAt as any)}
-        </span>
+        <div className="bi-align bi-s-h--x05 bi-text--sm bi-muted">
+          <span>
+            {relativeDate()(history.startedAt as any)}
+          </span>
+
+          <span>
+            ({absoluteDate()(history.startedAt as any)})
+          </span>
+        </div>
       );
     }
   }

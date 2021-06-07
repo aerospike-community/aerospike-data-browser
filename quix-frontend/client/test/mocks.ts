@@ -15,30 +15,24 @@ import {
   createFolderPayload
 } from "@wix/quix-shared";
 import * as moment from "moment";
+import {ServerTreeItem} from '../src/components/db-sidebar/db-sidebar-types';
+import {v4 as uuidv4} from 'uuid';
 
 const mocks = {
   "/api/user": () => createUser(),
   "/api/events": () => [200],
-  "/api/users": () => [
-    createMockUser({
-      id: "valery@wix.com",
-      email: "valery@wix.com",
-      avatar: "http://quix.wix.com/assets/user.svg",
-      name: "Valery Frolov",
-      rootFolder: "6c98fe9a-39f7-4674-b003-70f9061bbee5",
-      dateCreated: Date.now(),
-      dateUpdated: Date.now()
-    }),
-    createMockUser({
-      id: "anton@wix.com",
-      email: "anton@wix.com",
-      avatar: "http://quix.wix.com/assets/user.svg",
-      name: "Anton Podolsky",
-      rootFolder: "de6908dd-7f1e-4803-ab0d-5f9d6a496609",
-      dateCreated: Date.now(),
-      dateUpdated: Date.now()
-    })
-  ],
+  "/api/users": () => 
+    [...Array(200).keys()].map(key =>
+      createMockUser({
+        id: uuidv4(),
+        email: "valery" + key + "@wix.com",
+        avatar: "http://quix.wix.com/assets/user.svg",
+        name: "Valery Frolov" + key,
+        rootFolder: "6c98fe9a-39f7-4674-b003-70f9061bbee5",
+        dateCreated: Date.now(),
+        dateUpdated: Date.now()
+      })
+    ),
   "/api/history": () => {
     return [...Array(101).keys()].map(key =>
       createMockHistory({
@@ -92,9 +86,14 @@ const mocks = {
           name: "Runnable (error)",
           content: "do error"
         }),
-        createMockNote(id, { id: "1005" }),
-        createMockNote(id, { id: "1006" }),
-        createMockNote(id, { id: "1007" })
+        createMockNote(id, {
+          id: "1005",
+          name: "Runnable (permission error)",
+          content: "do permission error"
+        }),
+        createMockNote(id, { id: "1006", content: 'select 1'}),
+        createMockNote(id, { id: "1007" }),
+        createMockNote(id, { id: "1008" }),
       ],
       {
         id,
@@ -154,30 +153,27 @@ ORDER BY 1
   // '/api/db/presto/explore': () => [],
   "/api/db/:type/explore": ({ type }) => {
     if (type === "presto") {
-      return [
-        {
-          name: "catalog",
-          type: "catalog",
+      const response = [];
+      for (let i = 0; i < 50; i++) {
+        response.push({
+          name: 'catalog' + i,
+          type: 'catalog',
           children: [
             {
-              name: "schema",
-              type: "schema",
+              name: 'schema' + i,
+              type: 'schema',
               children: [
                 {
-                  name: "table_with_a_very_looooooooooooooooong_name",
-                  type: "table",
+                  name: 'table' + i,
+                  type: 'table',
                   children: []
                 }
               ]
             }
           ]
-        },
-        {
-          name: "catalog2",
-          type: "catalog",
-          children: []
-        }
-      ];
+        })
+      }
+      return response;
     }
 
     return [
@@ -215,42 +211,30 @@ ORDER BY 1
     columns: ["column"]
   }),
   // '/api/db/:type/search': () => [],
-  "/api/db/:type/search": () => [
-    {
-      name: "catalog",
-      type: "catalog",
-      children: [
-        {
-          name: "schema",
-          type: "schema",
+  "/api/db/:type/search": () => {
+    const response = [];
+      for (let i = 0; i < 10; i++) {
+        response.push({
+          name: 'catalog' + i,
+          type: 'catalog',
           children: [
             {
-              name: "table_with_a_very_looooooooooooooooong_name",
-              type: "table",
-              children: []
+              name: 'schema' + i,
+              type: 'schema',
+              children: [
+                {
+                  name: 'table' + i,
+                  type: 'table',
+                  children: []
+                }
+              ]
             }
           ]
-        }
-      ]
-    },
-    {
-      name: "catalog2",
-      type: "catalog",
-      children: [
-        {
-          name: "schema2",
-          type: "schema",
-          children: [
-            {
-              name: "table2_with_a_very_looooooooooooooooong_name",
-              type: "table",
-              children: []
-            }
-          ]
-        }
-      ]
-    }
-  ]
+        })
+      }
+      return response;
+  }
+  
 };
 
 let mockOverrides = {};
@@ -331,29 +315,48 @@ export const createMockNote = (
   return createNote(notebookId, { owner: "local@quix.com", ...props });
 };
 
-export const mock = (patternOrUrl: string, patternPayload?: any) => {
+export const createMockDbExplorer = (
+  items: ServerTreeItem[] = [],
+): ServerTreeItem[] => {
+  return items.length > 0 ? items : [createMockDbExplorerItem()];
+};
+
+export const createMockDbExplorerItem = (
+  props: Partial<ServerTreeItem> = {},
+): ServerTreeItem => {
+  return {
+    name: props.name || 'treeItem',
+    type: props.type || 'catalog',
+    children: props.children || [],
+  };
+};
+
+export const mock = async (patternOrUrl: string, patternPayload?: any, options?: {}) => {
   if (patternPayload) {
-    mockOverrides[patternOrUrl] = () => patternPayload;
+    mockOverrides[patternOrUrl] = {options, getPayload: () => patternPayload};
   } else {
-    return (
-      Object.keys(mocks).reduce((res, key) => {
+    const [status, payload, delay] = Object.keys(mocks).reduce((res, key) => {
         if (!res) {
           const match = new UrlPattern(key).match(patternOrUrl);
 
           if (match) {
-            let payload = (mockOverrides[key] || mocks[key])(match);
+            let payloadResult = (mockOverrides[key]?.getPayload || mocks[key])(match);
 
-            if (payload && typeof payload[0] !== "number") {
-              payload = [200, payload];
+            if (payloadResult && typeof payloadResult[0] !== "number") {
+              payloadResult = [200, payloadResult];
             }
 
-            return payload;
+            return [...payloadResult, mockOverrides[key]?.options?.delay];
           }
         }
 
         return res;
       }, null) || [404, { message: "Mock not found" }]
-    );
+    
+    if (delay) {
+      await new Promise(res => setTimeout(res, delay));
+    }
+    return [status, payload];
   }
 };
 

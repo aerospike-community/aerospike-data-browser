@@ -1,8 +1,10 @@
+import { isArray } from 'lodash';
 import {setupNotifications} from './bootstrap';
 import create from './lib/app';
 import {hooks} from './hooks';
 import * as components from './components';
 import * as stateComponents from './state-components';
+import * as reactComponents from './react-components';
 import {branches, initCache} from './store';
 import {config as runnerConfig} from './lib/runner';
 import {config as resourcesConfig} from './services/resources';
@@ -10,6 +12,7 @@ import {pluginManager} from './plugins';
 import {ClientConfigHelper, ModuleComponentType} from '@wix/quix-shared';
 import {openTempQuery} from './services';
 import {inject} from './lib/core';
+import { AUTO_PARAMS, AUTO_PARAM_DEFAULTS, AUTO_PARAM_TYPES } from './lib/code-editor/services/param-parser/param-types';
 
 export {hooks} from './hooks';
 
@@ -40,6 +43,7 @@ const appBuilder = create<ClientConfigHelper>(
   .plugin('app', plugin => {
     plugin.components(components);
     plugin.stateComponents(stateComponents);
+    plugin.reactComponents(reactComponents);
     plugin.store(branches, `${apiBasePath}/api/events`, 'Node');
 
     plugin.menuItem({
@@ -55,6 +59,16 @@ const appBuilder = create<ClientConfigHelper>(
     });
 
     plugin.onPluginReady((app, store) => {
+      const autoParams = hooks.note.config.editor.autoParams.call(app, store);
+
+      if (isArray(autoParams)) {
+        autoParams.forEach(({name, type, defaultValue}) => {
+          AUTO_PARAMS.push(name);
+          AUTO_PARAM_TYPES[name] = type;
+          AUTO_PARAM_DEFAULTS[name] = defaultValue;
+        });
+      }
+
       runnerConfig.set({
         executeBaseUrl,
         apiBasePath,
@@ -67,7 +81,7 @@ const appBuilder = create<ClientConfigHelper>(
       clientConfig
         .getModulesByComponent(ModuleComponentType.Db)
         .forEach(({id, engine}) => {
-          pluginManager.module(ModuleComponentType.Db).plugin(id, engine, app);
+          pluginManager.module(ModuleComponentType.Db).plugin(id, engine, app, store);
         });
 
       clientConfig
@@ -75,7 +89,7 @@ const appBuilder = create<ClientConfigHelper>(
         .forEach(({id, engine}) => {
           pluginManager
             .module(ModuleComponentType.Note)
-            .plugin(id, engine, app);
+            .plugin(id, engine, app, store);
         });
 
       pluginManager

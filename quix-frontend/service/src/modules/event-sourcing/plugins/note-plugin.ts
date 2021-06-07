@@ -1,13 +1,20 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {DbNote, NoteRepository, DbNotebook} from 'entities';
-import {convertDbNote, convertNoteToDb} from 'entities/note/dbnote.entity';
-import {NoteActions, NoteActionTypes, noteReducer} from 'shared/entities/note';
+import {DbNote, NoteRepository, DbNotebook} from '../../../entities';
+import {
+  convertDbNote,
+  convertNoteToDb,
+} from '../../../entities/note/dbnote.entity';
+import {
+  NoteActions,
+  NoteActionTypes,
+  noteReducer,
+} from '@wix/quix-shared/entities/note';
 import {EventBusPlugin, EventBusPluginFn} from '../infrastructure/event-bus';
 import {QuixHookNames} from '../types';
 import {IAction} from '../infrastructure/types';
 import {extractEventNames, assertOwner} from './utils';
-import {NotebookRepository} from 'entities/notebook/notebook.repository';
+import {NotebookRepository} from '../../../entities/notebook/notebook.repository';
 
 @Injectable()
 export class NotePlugin implements EventBusPlugin {
@@ -73,7 +80,9 @@ export class NotePlugin implements EventBusPlugin {
             const model = convertDbNote(dbModel);
             const newModel = noteReducer(model, action);
             if (newModel && model !== newModel) {
-              return this.noteRepository.save(convertNoteToDb(newModel));
+              return this.noteRepository.save(convertNoteToDb(newModel), {
+                reload: false,
+              });
             }
           }
         }

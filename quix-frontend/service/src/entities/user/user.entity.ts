@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import {dbConf} from '../../config/db-conf';
-import {IUser} from 'shared';
+import {IUser} from '@wix/quix-shared';
 
 @Entity({name: 'users'})
 export class DbUser {
@@ -58,6 +58,18 @@ export const dbUserToUser = (dbUser: DbUser): IUser => {
 };
 
 export const userToDbUser = (user: IUser) => {
-  const {avatar, email, id, name, rootFolder} = user;
-  return new DbUser({avatar, id, name, rootFolder});
+  const {avatar, email, id, name, rootFolder, dateCreated, dateUpdated} = user;
+  const dbUser = new DbUser({
+    avatar,
+    id,
+    name,
+    rootFolder,
+  });
+  if (dateCreated !== undefined) {
+    dbUser.dateCreated = dateCreated;
+  }
+  if (dateUpdated !== undefined) {
+    dbUser.dateUpdated = dateUpdated;
+  }
+  return dbUser;
 };

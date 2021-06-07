@@ -2,13 +2,20 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {DbFolder, DbFileTreeNode} from '../../../entities';
 import {Repository} from 'typeorm';
-import {FileActions, FileActionTypes, IFile} from 'shared/entities/file';
-import {NotebookActions, NotebookActionTypes} from 'shared/entities/notebook';
+import {
+  FileActions,
+  FileActionTypes,
+  IFile,
+} from '@wix/quix-shared/entities/file';
+import {
+  NotebookActions,
+  NotebookActionTypes,
+} from '@wix/quix-shared/entities/notebook';
 import {EventBusPlugin, EventBusPluginFn} from '../infrastructure/event-bus';
 import {QuixHookNames} from '../types';
 import {last} from 'lodash';
-import {FileType} from 'shared/entities/file';
-import {FileTreeRepository} from 'entities/filenode/filenode.repository';
+import {FileType} from '@wix/quix-shared/entities/file';
+import {FileTreeRepository} from '../../../entities/filenode/filenode.repository';
 import {IAction} from '../infrastructure/types';
 import {
   extractEventNames,
@@ -108,6 +115,8 @@ export class FileTreePlugin implements EventBusPlugin {
               id: file.id,
               owner: action.user,
               name: file.name,
+              dateCreated: action.dateCreated,
+              dateUpdated: action.dateCreated,
             });
             const node = new DbFileTreeNode();
 
@@ -118,7 +127,8 @@ export class FileTreePlugin implements EventBusPlugin {
               folder,
             });
 
-            return this.fileTreeNodeRepo.save(node);
+            // we should use .insert() here, but looks like it doesn't cascade folder row
+            return this.fileTreeNodeRepo.save(node, {reload: false});
           }
 
           case FileActionTypes.updateName: {
@@ -128,7 +138,7 @@ export class FileTreePlugin implements EventBusPlugin {
             });
 
             folder.name = action.name;
-            return this.folderRepo.save(folder);
+            return this.folderRepo.save(folder, {reload: false});
           }
 
           case NotebookActionTypes.moveNotebook: {
@@ -136,7 +146,7 @@ export class FileTreePlugin implements EventBusPlugin {
             const parent = lastAndAssertExist(path, action);
 
             const node = new DbFileTreeNode(id, {parentId: parent.id});
-            return this.fileTreeNodeRepo.save(node);
+            return this.fileTreeNodeRepo.save(node, {reload: false});
           }
 
           case FileActionTypes.moveFile: {

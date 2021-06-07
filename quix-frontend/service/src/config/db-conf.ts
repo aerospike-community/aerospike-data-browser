@@ -1,13 +1,15 @@
 import {ColumnOptions} from 'typeorm';
 import {getEnv} from './env/env';
-import {FileType} from 'shared/entities/file';
-import {ContentSearch, searchTextType} from 'modules/search/types';
-import {EntityType} from 'common/entity-type.enum';
+import {FileType} from '@wix/quix-shared/entities/file';
+import {ContentSearch, searchTextType} from '../modules/search/types';
+import {escape} from 'mysql';
+import {EntityType} from '../common/entity-type.enum';
 
 /* A compatibility layer between MySql and Sqlite (sqljs), should handle everything that typeorm doesn't handle for us */
 interface DbColumnConf {
   json: ColumnOptions;
   shortTextField: ColumnOptions;
+  nameField: ColumnOptions;
   noteContent: ColumnOptions;
   dateUpdated: ColumnOptions;
   dateCreated: ColumnOptions;
@@ -26,17 +28,21 @@ interface DbColumnConf {
 const MySqlConf: DbColumnConf = {
   json: {type: 'json', nullable: true},
   shortTextField: {type: 'varchar', length: 64},
+  nameField: {type: 'varchar', length: 512},
   noteContent: {type: 'mediumtext', nullable: true},
   dateUpdated: {
     transformer: {
       from: (d?: Date) => d && d.valueOf(),
-      to: () => undefined,
+      to: (v?: number) => (v !== undefined ? new Date(v) : undefined),
     },
     readonly: true,
     name: 'date_updated',
   },
   dateCreated: {
-    transformer: {from: (d?: Date) => d && d.valueOf(), to: () => undefined},
+    transformer: {
+      from: (d?: Date) => d && d.valueOf(),
+      to: (v?: number) => (v !== undefined ? new Date(v) : undefined),
+    },
     readonly: true,
     name: 'date_created',
   },
@@ -59,21 +65,22 @@ const MySqlConf: DbColumnConf = {
   userAvatar: {nullable: true, type: 'varchar', length: 255},
   concat: (s1, s2) => `CONCAT(${s1}, ${s2})`,
   fullTextSearch(columnName, contentSearchList) {
-    return `MATCH(${columnName}) AGAINST (${
+    return `MATCH(${columnName}) AGAINST (${escape(
       contentSearchList
         .map(contentSearch =>
           contentSearch.type === searchTextType.PHRASE
             ? `"${contentSearch.text}"`
             : `${contentSearch.text}*`,
         )
-        .join(' ')
-    } IN BOOLEAN MODE)`;
+        .join(' '),
+    )} IN BOOLEAN MODE)`;
   },
 };
 
 const SqliteConf: DbColumnConf = {
   json: {type: 'simple-json', nullable: true},
   shortTextField: {type: 'varchar', length: 64},
+  nameField: {type: 'varchar', length: 512},
   noteContent: {type: 'text', nullable: true},
   dateUpdated: {
     type: 'integer',
@@ -89,7 +96,7 @@ const SqliteConf: DbColumnConf = {
           date.getUTCSeconds(),
         ).valueOf();
       },
-      to: () => undefined,
+      to: (v?: number) => v,
     },
   },
   dateCreated: {
@@ -106,7 +113,7 @@ const SqliteConf: DbColumnConf = {
           date.getUTCSeconds(),
         ).valueOf();
       },
-      to: () => undefined,
+      to: (v?: number) => v,
     },
   },
   eventsTimestamp: {

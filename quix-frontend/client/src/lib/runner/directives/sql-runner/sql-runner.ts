@@ -9,14 +9,7 @@ import {initSqlWorker} from '../../services/workers/sql-parser-worker';
 import {RunnerComponentInstance} from '../runner/runner';
 import {requestCredentials, isPermissionError} from '../../services/permissions/permissions-service';
 import {config} from '../../config';
-
-const AUTO_PARAMS = [{
-  name: 'START_TIME',
-  meta: 'datetime'
-}, {
-  name: 'STOP_TIME',
-  meta: 'datetime'
-}];
+import { AUTO_PARAMS, AUTO_PARAM_TYPES } from '../../../code-editor/services/param-parser/param-types';
 
 function renderActions(scope, editorComponentInstance, runnerComponentInstance, transclude: ng.ITranscludeFunction) {
   if (!transclude.isSlotFilled('actions')) {
@@ -72,7 +65,8 @@ export default () => {
         const modelConf = createNgModel(scope, ngModel)
           .formatWith(model => ({value: model}))
           .parseWith(({value}) => value)
-          .watchDeep(true);
+          .watchDeep(true)
+          .then(() => scope.vm.toggle(true));
 
         initNgScope(scope)
           .withOptions('bsrOptions', {
@@ -170,17 +164,19 @@ export default () => {
                   if (scope.options.autoParams) {
                     completions = [
                       ...completions,
-                      ...AUTO_PARAMS.map(({name, meta}) => ({
-                        caption: name,
-                        value: params.getParser().getSerializer().serialize({
-                          match: null,
-                          key: name,
-                          type: null,
-                          value: null,
-                          isAutoParam: true,
-                          isKeyOnlyParam: false,
-                          options: null
-                        }),
+                      ...AUTO_PARAMS
+                        .map(name => ({name, meta: AUTO_PARAM_TYPES[name]}))
+                        .map(({name, meta}) => ({
+                          caption: name,
+                          value: params.getParser().getSerializer().serialize({
+                            match: null,
+                            key: name,
+                            type: null,
+                            value: null,
+                            isAutoParam: true,
+                            isKeyOnlyParam: false,
+                            options: null
+                          }),
                         meta,
                         completer: {
                           insertMatch(editor) {
@@ -264,10 +260,6 @@ export default () => {
           });
 
         scope.renderActions = () => ({html: renderActions(scope, editorInstance, runnerInstance, transclude)});
-
-        scope.getCtrlKeyName = () => {
-          return navigator.platform === 'MacIntel' ? 'Command' : 'Ctrl';
-        };
       }
     }
   };

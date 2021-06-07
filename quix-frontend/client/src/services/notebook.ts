@@ -76,8 +76,8 @@ export const copyNotebook = async (store: Store, app: App, parentOrPath: IFile |
 
   return store.logAndDispatch([
     NotebookActions.createNotebook(newNotebook.id, newNotebook),
-    ...notes.map(({name: noteName, type, content, owner}) => {
-      const note = createNote(newNotebook.id, {name: noteName, type, content, owner} as any);
+    ...notes.map(({name: noteName, type, content, richContent, owner}) => {
+      const note = createNote(newNotebook.id, {name: noteName, type, content, richContent, owner} as any);
       return NoteActions.addNote(note.id, note);
     })
   ])
@@ -86,12 +86,13 @@ export const copyNotebook = async (store: Store, app: App, parentOrPath: IFile |
 }
 
 export const copyNote = async (store: Store, app: App, targetNotebook: INotebook, sourceNote: INote) => {
-  const {name, content, type} = sourceNote;
+  const {name, content, richContent, type} = sourceNote;
 
   const newNote = createNote(targetNotebook.id, {
     name: `Copy of ${name}`,
     type,
     content,
+    richContent,
     owner: app.getUser().getEmail()
   });
 
@@ -109,7 +110,9 @@ export const deleteNotebook = async (store: Store, app: App, notebook: INotebook
 export const saveQueuedNotes = (store: Store) => {
   const {notes} = store.getState('notebook.queue') as {notes: Record<string, INote>};
 
-  return store.logAndDispatch(Object.keys(notes).map(id => NoteActions.updateContent(id, notes[id].content)));
+  return store.logAndDispatch(Object.keys(notes).map(id =>
+    NoteActions.updateContent(id, notes[id].content, notes[id].richContent)
+  ));
 }
 
 export const hasQueuedNotes = (store: Store) => {

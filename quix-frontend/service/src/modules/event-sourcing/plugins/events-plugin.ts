@@ -1,13 +1,8 @@
-import {Injectable, Inject} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {DbUser, userToDbUser} from 'entities/user/user.entity';
-import {UserActions, UserActionTypes} from 'shared/entities/user';
-import {Repository} from 'typeorm';
+import {Inject, Injectable} from '@nestjs/common';
+import {EventsService} from '../events.service';
 import {EventBusPlugin, EventBusPluginFn} from '../infrastructure/event-bus';
 import {IAction} from '../infrastructure/types';
 import {QuixHookNames} from '../types';
-import {extractEventNames} from './utils';
-import {EventsService} from '../events.service';
 
 @Injectable()
 export class EventsPlugin implements EventBusPlugin {
@@ -16,12 +11,10 @@ export class EventsPlugin implements EventBusPlugin {
   constructor(@Inject(EventsService) private eventsService: EventsService) {}
 
   registerFn: EventBusPluginFn = api => {
-    api.hooks.listen(
-      QuixHookNames.VALIDATION,
-      async (action: IAction) => undefined,
-    );
     api.hooks.listen(QuixHookNames.PROJECTION, async (action: IAction) => {
-      this.eventsService.logEvent(action);
+      if (!action.ethereal) {
+        this.eventsService.logEvent(action);
+      }
     });
   };
 }

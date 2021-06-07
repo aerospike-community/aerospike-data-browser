@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
-import {INote, IBaseNote} from 'shared/entities/note';
+import {INote, IBaseNote} from '@wix/quix-shared/entities/note';
 import {DbNotebook} from '../notebook/dbnotebook.entity';
 import {dbConf} from '../../config/db-conf';
 
@@ -16,8 +16,13 @@ export class DbNote {
   @PrimaryColumn({...dbConf.idColumn})
   id!: string;
 
+  /** for any extra properties that might be added in the future */
   @Column({...dbConf.json, name: 'json_content'})
   jsonContent!: any;
+
+  /** for note data */
+  @Column({...dbConf.json, name: 'rich_content'})
+  richContent!: any;
 
   @Index({fulltext: true})
   @Column(dbConf.noteContent)
@@ -26,7 +31,7 @@ export class DbNote {
   @Column(dbConf.shortTextField)
   type!: string;
 
-  @Column(dbConf.shortTextField)
+  @Column(dbConf.nameField)
   name!: string;
 
   @Index()
@@ -39,11 +44,7 @@ export class DbNote {
   @CreateDateColumn(dbConf.dateCreated)
   dateCreated!: number;
 
-  @ManyToOne(
-    type => DbNotebook,
-    n => n.notes,
-    {onDelete: 'CASCADE'},
-  )
+  @ManyToOne(type => DbNotebook, n => n.notes, {onDelete: 'CASCADE'})
   notebook?: DbNotebook;
 
   @Column()
@@ -69,6 +70,7 @@ export const convertDbNote = (dbNote: DbNote): INote => {
     owner,
     textContent,
     jsonContent,
+    richContent,
     type,
   } = dbNote;
 
@@ -76,6 +78,7 @@ export const convertDbNote = (dbNote: DbNote): INote => {
     type,
     id,
     content: textContent,
+    richContent: richContent || {},
     dateCreated,
     dateUpdated,
     name,
@@ -94,6 +97,7 @@ export const convertNoteToDb = (note: INote): DbNote => {
     content,
     dateCreated,
     dateUpdated,
+    richContent,
   } = note;
 
   return new DbNote({
@@ -101,6 +105,7 @@ export const convertNoteToDb = (note: INote): DbNote => {
     id,
     textContent: note.content,
     jsonContent: {},
+    richContent,
     name,
     notebookId,
     owner,

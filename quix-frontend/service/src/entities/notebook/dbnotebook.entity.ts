@@ -1,4 +1,4 @@
-import {IFilePathItem, INotebook} from 'shared';
+import {IFilePathItem, INotebook} from '@wix/quix-shared';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -21,7 +21,7 @@ export class DbNotebook {
   @PrimaryColumn({...dbConf.idColumn})
   id!: string;
 
-  @Column(dbConf.shortTextField)
+  @Column(dbConf.nameField)
   name!: string;
 
   @Column(dbConf.shortTextField)
